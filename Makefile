@@ -40,11 +40,11 @@ clean:
 	rm -f $(wildcard $(output)/*.html)
 
 # The order of the files in the contents directory must be given in the file
-# ORDER.txt.  The list in the file ORDER.txt must *exclude* the special files
-# front-matter.txt, authors.txt, and contact.txt, even though we put those
+# ORDER.  The list in the file ORDER must *exclude* the special files
+# front-matter.md, authors.md, and contact.md, even though we put those
 # files in the contents/ directory too.
 
-body-files = $(shell grep -v '^\s*\#' $(input)/ORDER.txt)
+body-files = $(shell grep -v '^\s*\#' $(input)/ORDER)
 
 # The bibliography file is set by the next variable.
 
@@ -104,15 +104,15 @@ sed-replace-head = <li class=\"headline\"><a href=\"$$out\#\1\"><span class=\"se
 sed-match-rest   = .*\#\([^\"]*\)\"><span class=\"toc-section-number\">\([0-9]\..*\)</span>\(.*\)</a>.*
 sed-replace-rest = <li><a href=\"$$out\#\1\"><span class=\"section-number\">\2</span>\3</a></li>
 
+$(output)/index.html: $(wildcard $(input)/*.md) $(input)/ORDER
 $(output)/index.html: $(header-tp) $(nav-tp) $(body-tp) $(author-templ) $(toc-tp)
-$(output)/index.html: $(wildcard $(input)/*.txt)
 $(output)/index.html: Makefile $(index-top-tp) $(index-bot-tp)
 	mkdir -p $(output)
 	make style-files
 	rm -f toc.html
 	num=1; \
 	for in in $(body-files); do \
-	  out="$${in%.txt}.html"; \
+	  out="$${in%.md}.html"; \
 	  offset=`expr $$num - 1`; \
 	  $(pan-toc) --number-offset=$$offset -o $(output)/$$out $(input)/$$in; \
 	  sed -n -e "s|$(sed-match-head)|$(sed-replace-head)|p" < $(output)/$$out >> toc.html; \
@@ -125,18 +125,18 @@ $(output)/index.html: Makefile $(index-top-tp) $(index-bot-tp)
 	sed -e '/<!-- @@HTML-TOC@@ -->/r toc.html' < $(nav-tp) > nav.html
 	offset=0; \
 	for in in $(body-files); do \
-	  out="$${in%.txt}.html"; \
+	  out="$${in%.md}.html"; \
 	  $(pan-body) --template=$(body-tp) --number-offset=$$offset -o $(output)/$$out $(input)/$$in; \
 	  offset=`expr $$offset + 1`; \
 	done;
-	$(pan-misc) --template=$(author-tp) -o $(output)/authors.html $(input)/authors.txt
-	$(pan-misc) --template=$(single-pg-tp) -o $(output)/contact.html $(input)/contact.txt
-	sed -e 's/<!-- @@TIMESTAMP@@ -->/$(timestamp)/' < $(input)/front-matter.txt > index.txt
-	$(pan-misc) --template=$(index-top-tp) -o $(output)/index.html index.txt
+	$(pan-misc) --template=$(author-tp) -o $(output)/authors.html $(input)/authors.md
+	$(pan-misc) --template=$(single-pg-tp) -o $(output)/contact.html $(input)/contact.md
+	sed -e 's/<!-- @@TIMESTAMP@@ -->/$(timestamp)/' < $(input)/front-matter.md > index.md
+	$(pan-misc) --template=$(index-top-tp) -o $(output)/index.html index.md
 	cat toc.html >> $(output)/index.html
-	$(pan-misc) --template=$(index-bot-tp) -o index-bottom.html index.txt
+	$(pan-misc) --template=$(index-bot-tp) -o index-bottom.html index.md
 	cat index-bottom.html >> $(output)/index.html
-	rm -f toc.html nav.html index.txt index-bottom.html
+	rm -f toc.html nav.html index.md index-bottom.html
 
 # -----------------------------------------------------------------------------
 # The following rules populate the formatted/css, etc., directories from the
@@ -228,4 +228,4 @@ style-files: $(all-style-files)
 # -----------------------------------------------------------------------------
 
 .SUFFIXES:
-.SUFFIXES: .txt .css .js .svg .ttf .eot .woff .png .jpg .html
+.SUFFIXES: .md .css .js .svg .ttf .eot .woff .png .jpg .html
