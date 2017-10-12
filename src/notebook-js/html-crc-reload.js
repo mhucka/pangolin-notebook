@@ -19,7 +19,7 @@
 */
 
 /* Polling period, in seconds. */
-var cacheRefreshPeriod = 15;
+var cacheRefreshPeriod = 10;
 
 $(function() {
     check(true);
