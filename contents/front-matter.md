@@ -1,4 +1,4 @@
-% A Handbook for Academic Organizers of Community Standards
+% Pangolin Notebook
 % .
 % <!-- @@TIMESTAMP@@ -->
 
