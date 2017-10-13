@@ -9,8 +9,9 @@
 ## Normal usage:
 ##
 ##   make
-##       Regenerates the formatted HTML output in the directory $(output).
-##       If none of the input files changed, does nothing.
+##       Regenerates the formatted HTML output in the directory $(output)
+##       using the contents in $(input).  If none of the input files have
+##       been changed, it does nothing.
 ##
 ##   make -B
 ##       Force regenerating all output files.  Useful for testing, or when
@@ -24,7 +25,7 @@
 # Content and output directories.
 
 input	   = contents
-output	   = formatted
+output	   = /tmp/formatted
 
 # The index file serves as a kind of marker file; it is always regenerated if
 # the source files are changed, and regenerating it causes everything else to
@@ -41,8 +42,8 @@ clean:
 
 # The order of the files in the contents directory must be given in the file
 # ORDER.  The list in the file ORDER must *exclude* the special files
-# front-matter.md, authors.md, and contact.md, even though we put those
-# files in the contents/ directory too.
+# front-matter.md and about.md, even though we put those files in the
+# contents/ directory too.
 
 body-files = $(shell grep -v '^\s*\#' $(input)/ORDER)
 
@@ -55,7 +56,6 @@ bib-file = $(input)/references.bib
 template-dir = src/notebook-templates
 
 body-tp	     = $(template-dir)/body-template.html
-author-tp    = $(template-dir)/author-template.html
 single-pg-tp = $(template-dir)/single-page-template.html
 
 header-tp    = $(template-dir)/header-template.html
@@ -105,7 +105,7 @@ sed-match-rest   = .*\#\([^\"]*\)\"><span class=\"toc-section-number\">\([0-9]\.
 sed-replace-rest = <li><a href=\"$$out\#\1\"><span class=\"section-number\">\2</span>\3</a></li>
 
 $(output)/index.html: $(wildcard $(input)/*.md) $(input)/ORDER
-$(output)/index.html: $(header-tp) $(nav-tp) $(body-tp) $(author-templ) $(toc-tp)
+$(output)/index.html: $(header-tp) $(nav-tp) $(body-tp) $(toc-tp)
 $(output)/index.html: Makefile $(index-top-tp) $(index-bot-tp)
 	mkdir -p $(output)
 	make style-files
@@ -129,8 +129,7 @@ $(output)/index.html: Makefile $(index-top-tp) $(index-bot-tp)
 	  $(pan-body) --template=$(body-tp) --number-offset=$$offset -o $(output)/$$out $(input)/$$in; \
 	  offset=`expr $$offset + 1`; \
 	done;
-	$(pan-misc) --template=$(author-tp) -o $(output)/authors.html $(input)/authors.md
-	$(pan-misc) --template=$(single-pg-tp) -o $(output)/contact.html $(input)/contact.md
+	$(pan-misc) --template=$(single-pg-tp) -o $(output)/about.html $(input)/about.md
 	sed -e 's/<!-- @@TIMESTAMP@@ -->/$(timestamp)/' < $(input)/front-matter.md > index.md
 	$(pan-misc) --template=$(index-top-tp) -o $(output)/index.html index.md
 	cat toc.html >> $(output)/index.html
