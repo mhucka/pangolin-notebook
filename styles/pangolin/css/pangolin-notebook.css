@@ -16,6 +16,19 @@ body {
 /* This is needed to make jumping to in-page anchors from the nav bar work
 as expected.  Without this, the heading text appears underneath the nav bar. */
 
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.75em;
+}
+
+
+h3 {
+  font-size: 1.5em;
+}
+
 h2, h3, h4 {
     padding-top: 60px;
     margin-top: -60px;
@@ -64,4 +77,14 @@ li.headline {
 */
 center {
     margin-bottom: 10px;
+}
+
+/* Extra styles for the notebook.
+*/
+.date-tag {
+    clear: both;
+    font-size: 0.75em;
+    font-style: italic;
+    line-height: 1.75;
+    color: #666666;
 }

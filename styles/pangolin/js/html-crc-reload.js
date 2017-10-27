@@ -22,8 +22,14 @@
 var cacheRefreshPeriod = 10;
 
 $(function() {
-    check(true);
-    setInterval('check()', 1000 * cacheRefreshPeriod);
+    // Only run for local files.
+    if (location.hostname === "localhost"
+        || location.hostname === "127.0.0.1"
+        || location.hostname === "")
+    {
+        check(true);
+        setInterval('check()', 1000 * cacheRefreshPeriod);
+    };
 });
 
 var previousCrc = 0;
