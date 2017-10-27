@@ -1,8 +1,8 @@
 ## ============================================================================
-## Description : Makefile for generating a formatted Pangolin Notebook
+## Description : Main makefile for generating a formatted Pangolin Notebook
 ## Author(s)   : Michael Hucka <mhucka@caltech.edu>
 ## Organization: California Institute of Technology
-## Date created: 2014-01-24
+## Date created: 2017-10-13
 ## Source      : https://github.com/mhucka/pangolin-notebook
 ## ============================================================================
 ##
@@ -15,200 +15,187 @@
 ##
 ## ----------------------------------------------------------------------------
 
-# The index file serves as a kind of marker file; it is always regenerated if
-# the source files are changed, and regenerating it causes everything else to
-# be regenerated.  This is not the most efficient approach, but it makes this
-# makefile simple, and besides, the notebook is short enough that the time to
-# do it all is short.  That is why the default target here is "notebook".
+
+# Advanced customization variables.
+# .............................................................................
+# These can be changed, but doing so can have unexpected consequences, so
+# they are slightly hidden in this second-level makefile.
 
-notebook: $(output)/index.html
+# The style used for formatting bibliographies.  The file will be found in
+# the "styles" subdirectory of wherever the Pangolin Notebook files are.
 
-# Running "make clean" will remove the formatted HTML files.
+bib-style = modified-acm-siggraph.csl
+
+# The template for individual notebook pages.  The file will be found in
+# the "templates" subdirectory of wherever the Pangolin Notebook files are.
+
+page-template = pangolin-page.html
+
+
+# Main code -- no more customization variables after this point
+# .............................................................................
+
+pangolin-dir	:= $(notebook-dir)/$(pangolin-notebook)
+input-dir       := $(notebook-dir)/$(contents-dir)
+
+# Inputs
+
+contents-file   := $(notebook-dir)/$(contents-list)
+input-filenames := $(shell grep -v "^\s*\#|$(front-page)|$(about-page)" $(contents-file))
+input-files     := $(patsubst %,$(input-dir)/%,$(input-filenames))
+bib-files	:= $(wildcard $(input-dir)/*.bibtex)
+front-page-file := $(input-dir)/$(front-page)
+about-page-file := $(input-dir)/$(about-page)
+
+# Outputs
+
+index-file	:= $(output-dir)/index.html
+about-file      := $(output-dir)/$(about-page:.md=.html)
+output-files	:= $(patsubst %,$(output-dir)/%,$(input-filenames:.md=.html))
+
+# Templates
+
+doc-template	:= $(pangolin-dir)/templates/$(page-template)
+toc-template	:= $(pangolin-dir)/templates/pangolin-toc.html
+nav-template	:= $(pangolin-dir)/templates/pangolin-navbar.html
+bib-style-csl	:= $(pangolin-dir)/styles/citation-styles/$(bib-style)
+
+# Temp files
+
+navbar          := _nav.html
+toc             := _toc.html
+
+# Style files
+
+styles-dir      := $(pangolin-notebook)/styles
+
+css-files-src   := $(styles-dir)/pangolin/css/pangolin-notebook.css \
+		   $(styles-dir)/bootstrap/css/bootstrap-theme.min.css \
+		   $(styles-dir)/bootstrap/css/bootstrap.min.css
+
+js-files-src    := $(styles-dir)/pangolin/js/html-crc-reload.js \
+		   $(styles-dir)/bootstrap/js/bootstrap.min.js \
+		   $(styles-dir)/bootstrap/js/html5shiv.js \
+		   $(styles-dir)/bootstrap/js/jquery.min.js \
+		   $(styles-dir)/bootstrap/js/less-1.3.3.min.js
+
+font-files-src  := $(styles-dir)/bootstrap/fonts/glyphicons-halflings-regular.eot \
+		   $(styles-dir)/bootstrap/fonts/glyphicons-halflings-regular.svg \
+	 	   $(styles-dir)/bootstrap/fonts/glyphicons-halflings-regular.ttf \
+		   $(styles-dir)/bootstrap/fonts/glyphicons-halflings-regular.woff
+
+css-files       := $(addprefix $(output-dir)/css/,$(notdir $(css-files-src)))
+js-files        := $(addprefix $(output-dir)/js/,$(notdir $(js-files-src)))
+font-files      := $(addprefix $(output-dir)/fonts/,$(notdir $(font-files-src)))
+
+style-files     := $(css-files) $(js-files) $(font-files)
+
+# Arguments to pandoc
+
+doc-args = \
+	-f markdown \
+	-t html \
+	--standalone \
+	--smart \
+	--number-sections \
+	--email-obfuscation=none \
+	--mathjax \
+        --metadata link-citations=true \
+	--include-before-body=$(navbar) \
+	--template=$(doc-template) \
+	--data-dir $(notebook-dir) \
+	--csl=$(bib-style-csl) \
+	$(patsubst %,--bibliography %,$(bib-files))
+
+toc-args = \
+	-t html \
+	--standalone \
+	--smart \
+	--number-sections \
+	--toc \
+	--toc-depth=1 \
+	--template=$(toc-template)
+
+index-args = \
+	-t html \
+	--standalone \
+	--smart \
+	--toc \
+	--toc-depth=1 \
+	--template=$(toc-template)
+
+nav-args = \
+	-t html \
+	--standalone \
+	--smart \
+	--variable about_page="$(about-page:.md=.html)" \
+	--variable notebook_url="$(notebook-url)" \
+	--variable source_url="$(source-url)" \
+	--template=$(nav-template)
+
+# Action rules.
+
+default: | create-dirs $(navbar) $(style-files)
+default: $(index-file) $(output-files) $(contents-file) $(about-file)
+
+create-dirs:
+	mkdir -p $(output-dir)
+	mkdir -p $(output-dir)/css
+	mkdir -p $(output-dir)/js
+	mkdir -p $(output-dir)/fonts
+
+$(navbar): $(nav-template) $(contents-file)
+	pandoc $(nav-args) $(nav-template) -o $(navbar)
+
+$(index-file): $(front-page-file) $(input-files) $(contents-file)
+$(index-file): $(doc-template) $(toc-template)
+	echo '<ul class="toc">' > $(toc)
+	for file in $(input-files); do \
+	    html="$${file/$(contents-dir)/$(output-dir)}"; \
+	    html="$${html/.md/.html}"; \
+	    pandoc $(doc-args) $$file -o $$html; \
+	    title=`grep 'title:' $$file | cut -f2 -d':'`; \
+	    echo "<li><a href=\"$$html\"><span class=\"toc-entry\">" $$title "</span></a></li>" >> $(toc); \
+	done;
+	echo '</ul>' >> $(toc)
+	pandoc $(doc-args) $(front-page-file) | contents=`cat $(toc)` envsubst '$$contents' > $(index-file)
+
+$(output-dir)/%.html: $(contents-dir)/%.md
+	pandoc $(doc-args) $< -o $@
+
+$(about-file): $(about-page-file)
+	pandoc $(doc-args) $< -o $@
+
+$(output-dir)/css/%.css: $(styles-dir)/bootstrap/css/%.css
+	cp -rp $(styles-dir)/bootstrap/css/$(notdir $<) $(output-dir)/css/$(notdir $<)
+
+$(output-dir)/css/%.css: $(styles-dir)/pangolin/css/%.css
+	cp -rp $(styles-dir)/pangolin/css/$(notdir $<) $(output-dir)/css/$(notdir $<)
+
+$(output-dir)/js/%.js: $(styles-dir)/bootstrap/js/%.js
+	cp -rp $(styles-dir)/bootstrap/js/$(notdir $<) $(output-dir)/js/$(notdir $<)
+
+$(output-dir)/js/%.js: $(styles-dir)/pangolin/js/%.js
+	cp -rp $(styles-dir)/pangolin/js/$(notdir $<) $(output-dir)/js/$(notdir $<)
+
+$(output-dir)/fonts/%: $(styles-dir)/bootstrap/fonts/%
+	cp -rp $(styles-dir)/bootstrap/fonts/$(notdir $<) $(output-dir)/fonts/$(notdir $<)
 
 clean:
-	rm -f $(wildcard $(output)/*.html)
+	-rm -f $(output-files) $(index-file) $(navbar) $(toc) $(about-file) \
+		$(style-files)
+	-rmdir $(output-dir)/css $(output-dir)/js $(output-dir)/fonts
+	-rmdir $(output-dir)
 
-# The order of the files in the contents directory must be given in the file
-# ORDER.  The list in the file ORDER must *exclude* the special files
-# front-matter.md and about.md, even though we put those files in the
-# contents/ directory too.
+watch-files := $(input-files) $(front-page-file) $(about-page-file) \
+		$(doc-template) $(toc-template) $(nav-template) \
+		$(bib-style-csl) $(css-files-src) $(js-files-src) $(font-files-src)
 
-body-files = $(shell grep -v '^\s*\#' $(input)/ORDER)
+autorefresh:;
+	((ls $(watch-files) | entr make) &)
 
-# The remainder below should not need to change under most circumstances.
+.PHONY: create-dirs
 
-template-dir = src/notebook-templates
-
-body-tp	     = $(template-dir)/body-template.html
-single-pg-tp = $(template-dir)/single-page-template.html
-
-header-tp    = $(template-dir)/header-template.html
-nav-tp       = $(template-dir)/nav-template.html
-toc-tp       = $(template-dir)/toc-template.html
-index-top-tp = $(template-dir)/index-top-template.html
-index-bot-tp = $(template-dir)/index-bottom-template.html
-bib-csl-file = $(template-dir)/$(bib-style)
-
-# There are dependencies between the Pandoc arguments listed here and the
-# processing done below.  For instance, --toc and -number-sections must
-# remain or the other stuff below will break.
-
-args = \
-	-f markdown \
-	--csl=$(bib-csl-file) \
-	--data-dir $(output) \
-	--include-in-header=$(header-tp) \
-	--email-obfuscation=none \
-	--number-sections \
-	--mathjax \
-	--smart \
-	--toc
-
-# Pandoc doesn't offer a way to generate a table of contents for multipage
-# HTML output.  The approach taken here uses two passes.  First, pandoc is
-# run over each input file using a special template solely for generating the
-# table of contents for one file.  The output is massaged using sed, and
-# appended to a temporary file called toc.html.  Then, the content of this
-# file is inserted into the navigation bar and the file index.html using sed
-# for the former and simple file append commands for the latter.
-#
-# This convoluted mess should not be necessary for other output formats
-# such as LaTeX and ePUB.  It's just the HTML case that needs this.
-
-pan-toc	 = pandoc $(args) --template=$(toc-tp)
-pan-body = pandoc $(args) -B nav.html --bibliography=$(bib-file)
-pan-misc = pandoc $(args) -B nav.html
-
-timestamp   = $(shell date '+%G-%m-%d %H:%M %Z')
-file-count  = $(words $(body-files))
-
-sed-match-head   = .*\#\([^\"]*\)\"><span class=\"toc-section-number\">\([0-9]\)</span>\(.*\)</a>.*
-sed-replace-head = <li class=\"headline\"><a href=\"$$out\#\1\"><span class=\"section-number\">\2</span>\3</a></li>
-
-sed-match-rest   = .*\#\([^\"]*\)\"><span class=\"toc-section-number\">\([0-9]\..*\)</span>\(.*\)</a>.*
-sed-replace-rest = <li><a href=\"$$out\#\1\"><span class=\"section-number\">\2</span>\3</a></li>
-
-$(output)/index.html: $(wildcard $(input)/*.md) $(input)/ORDER
-$(output)/index.html: $(header-tp) $(nav-tp) $(body-tp) $(toc-tp)
-$(output)/index.html: Makefile $(index-top-tp) $(index-bot-tp)
-	mkdir -p $(output)
-	make style-files
-	rm -f toc.html
-	num=1; \
-	for in in $(body-files); do \
-	  out="$${in%.md}.html"; \
-	  offset=`expr $$num - 1`; \
-	  $(pan-toc) --number-offset=$$offset -o $(output)/$$out $(input)/$$in; \
-	  sed -n -e "s|$(sed-match-head)|$(sed-replace-head)|p" < $(output)/$$out >> toc.html; \
-	  sed -n -e "s|$(sed-match-rest)|$(sed-replace-rest)|p" < $(output)/$$out >> toc.html; \
-	  if test $$num -ne $(file-count); then \
-	    echo "<li class=\"divider\">" >> toc.html; \
-	  fi; \
-	  num=`expr $$num + 1`; \
-	done;
-	sed -e '/<!-- @@HTML-TOC@@ -->/r toc.html' < $(nav-tp) > nav.html
-	offset=0; \
-	for in in $(body-files); do \
-	  out="$${in%.md}.html"; \
-	  $(pan-body) --template=$(body-tp) --number-offset=$$offset -o $(output)/$$out $(input)/$$in; \
-	  offset=`expr $$offset + 1`; \
-	done;
-	$(pan-misc) --template=$(single-pg-tp) -o $(output)/about.html $(input)/about.md
-	sed -e 's/<!-- @@TIMESTAMP@@ -->/$(timestamp)/' < $(input)/front-matter.md > index.md
-	$(pan-misc) --template=$(index-top-tp) -o $(output)/index.html index.md
-	cat toc.html >> $(output)/index.html
-	$(pan-misc) --template=$(index-bot-tp) -o index-bottom.html index.md
-	cat index-bottom.html >> $(output)/index.html
-	rm -f toc.html nav.html index.md index-bottom.html
-
-# -----------------------------------------------------------------------------
-# The following rules populate the formatted/css, etc., directories from the
-# source files, and also describe some additional common dependencies.  It is
-# unlikely that anything below this point needs to be changed in common
-# updates of this Makefile.
-# -----------------------------------------------------------------------------
-
-notebook-css-files = \
-	notebook.css
-
-notebook-js-files = \
-	html-crc-reload.js
-
-bootstrap-css-files = \
-	bootstrap-theme.css \
-	bootstrap-theme.min.css \
-	bootstrap.css \
-	bootstrap.min.css
-
-bootstrap-img-files = \
-	glyphicons-halflings-white.png \
-	glyphicons-halflings.png
-
-bootstrap-js-files = \
-	bootstrap.min.js \
-	html5shiv.js \
-	jquery.min.js \
-	less-1.3.3.min.js
-
-bootstrap-font-files = \
-	glyphicons-halflings-regular.eot \
-	glyphicons-halflings-regular.svg \
-	glyphicons-halflings-regular.ttf \
-	glyphicons-halflings-regular.woff
-
-$(output)/css/%.css: src/bootstrap/css/%.css
-	$(shell [ -d $(output)/css ] || mkdir -p $(output)/css)
-	cp -rp src/bootstrap/css/$(notdir $<) $(output)/css/$(notdir $<)
-
-$(output)/css/%.css: src/notebook-css/%.css
-	$(shell [ -d $(output)/css ] || mkdir -p $(output)/css)
-	cp -rp src/notebook-css/$(notdir $<) $(output)/css/$(notdir $<)
-
-$(output)/img/%.png: src/bootstrap/img/%.png
-	$(shell [ -d $(output)/img ] || mkdir -p $(output)/img)
-	cp -rp src/bootstrap/img/$(notdir $<) $(output)/img/$(notdir $<)
-
-$(output)/js/%.js: src/bootstrap/js/%.js
-	$(shell [ -d $(output)/js ] || mkdir -p $(output)/js)
-	cp -rp src/bootstrap/js/$(notdir $<) $(output)/js/$(notdir $<)
-
-$(output)/js/%.js: src/notebook-js/%.js
-	$(shell [ -d $(output)/js ] || mkdir -p $(output)/js)
-	cp -rp src/notebook-js/$(notdir $<) $(output)/js/$(notdir $<)
-
-$(output)/fonts/%.eot: src/bootstrap/fonts/%.eot
-	$(shell [ -d $(output)/fonts ] || mkdir -p $(output)/fonts)
-	cp -rp src/bootstrap/fonts/$(notdir $<) $(output)/fonts/$(notdir $<)
-
-$(output)/fonts/%.svg: src/bootstrap/fonts/%.svg
-	$(shell [ -d $(output)/fonts ] || mkdir -p $(output)/fonts)
-	cp -rp src/bootstrap/fonts/$(notdir $<) $(output)/fonts/$(notdir $<)
-
-$(output)/fonts/%.ttf: src/bootstrap/fonts/%.ttf
-	$(shell [ -d $(output)/fonts ] || mkdir -p $(output)/fonts)
-	cp -rp src/bootstrap/fonts/$(notdir $<) $(output)/fonts/$(notdir $<)
-
-$(output)/fonts/%.woff: src/bootstrap/fonts/%.woff
-	$(shell [ -d $(output)/fonts ] || mkdir -p $(output)/fonts)
-	cp -rp src/bootstrap/fonts/$(notdir $<) $(output)/fonts/$(notdir $<)
-
-css-files       = $(addprefix $(output)/css/,$(bootstrap-css-files)) \
-                  $(addprefix $(output)/css/,$(notebook-css-files))
-
-img-files       = $(addprefix $(output)/img/,$(bootstrap-img-files))
-
-js-files        = $(addprefix $(output)/js/,$(bootstrap-js-files)) \
-                  $(addprefix $(output)/js/,$(notebook-js-files))
-
-font-files      = $(addprefix $(output)/fonts/,$(bootstrap-font-files))
-
-all-style-files = $(css-files) $(img-files) $(js-files) $(font-files)
-
-style-files: $(all-style-files)
-
-# -----------------------------------------------------------------------------
-# Miscellaneous items.
-# -----------------------------------------------------------------------------
-
-.SUFFIXES:
-.SUFFIXES: .md .css .js .svg .ttf .eot .woff .png .jpg .html
+
+# End.
+# .............................................................................
