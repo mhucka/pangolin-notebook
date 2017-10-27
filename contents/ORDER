@@ -1,8 +1,0 @@
-# This file lists the order of the files to be used in the contents of the
-# handbook, EXCLUDING the following special files: authors.txt, contact.txt
-# and front-matter.txt. (The special files do not need to be listed here.)
-# Blank lines and lines beginning with a pound sign will be ignored.  The
-# order of the contents files given here will be the order in which the main
-# sections appear in the document.
-
-introduction.md
