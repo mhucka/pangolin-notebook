@@ -1,3 +1,6 @@
+Licensing and Distribution Terms for Pangolin Notebook
+------------------------------------------------------
+
 Copyright (c) 2017 by Michael Hucka and the California Institute of
 Technology (Pasadena, California, USA).
 
@@ -23,3 +26,34 @@ Neither the author's name, nor the name of the California Institute of
 Technology (Caltech), may be used to endorse or promote products derived from
 this software without specific prior written permission.
 
+
+Third-party materials used in Pangolin Notebook
+-----------------------------------------------
+
+Pangolin Notebook uses open-source materials from other projects.  The files
+are located in the "styles" subdirectory.  The following are the license
+statements from the original sources:
+
+* LESS - Leaner CSS v1.3.3
+  http://lesscss.org
+  Copyright (c) 2009-2013, Alexis Sellier.
+  Licensed under the Apache 2.0 License.
+
+* jQuery v2.0.0
+  http://query.org
+  (c) 2005, 2013 jQuery Foundation, Inc.
+  Licensed under the MIT License.
+
+* HTML5 Shiv v3.6.2
+  https://github.com/aFarkas/html5shiv
+  Copyright (c) 2014 Alexander Farkas (aFarkas).
+  Licensed under the MIT and GPL version 2 Licenses.
+
+* Bootstrap v3.0.1
+  http://bootstrapdocs.com/v3.0.1/docs/
+  Copyright 2013 Twitter, Inc.
+  Licensed under http://www.apache.org/licenses/LICENSE-2.0
+
+* "acm-siggraph.csl"
+  https://github.com/citation-style-language/styles
+  Licensed under the CC Attribution-ShareAlike 3.0 Unported license.
