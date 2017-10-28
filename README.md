@@ -20,7 +20,14 @@ The "Pangolin" in the name is a loose acronym for _**PAN**doc-based **G**ithub d
 
 If you find an issue, please submit it in [the GitHub issue tracker](https://github.com/mhucka/pangolin-notebook/issues) for this repository.
 
+
 ♬ Contributing &mdash; info for developers
 ------------------------------------------
 
 I would be happy to receive your help and participation if you are interested.  Everyone is asked to read and respect the [code of conduct](CONDUCT.md) when participating in this project.
+
+
+★ Do you like it?
+------------------
+
+If you like this software, don't forget to give this repo a star on GitHub to show your support!
