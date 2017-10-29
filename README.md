@@ -103,3 +103,9 @@ Copyright (c) 2017 by Michael Hucka and the California Institute of
 Technology.
 
 The original files in this project are licensed under the MIT License.  This project makes use of files from other projects such as [Bootstrap](http://bootstrapdocs.com/v3.0.1/docs/).  Please see the file [LICENSE](LICENSE) for complete copyright and license details.
+
+
+☺ Acknowledgments
+-----------------------
+
+The code for detecting changes in a page was originally created by S. Fuchs and described in a [blog entry](https://kiwidev.wordpress.com/2011/07/14/auto-reload-page-if-html-changed/).  The JavaScript CRC check function used here was [posted to Stack Overflow](https://stackoverflow.com/a/18639999/743730) by user "Alex".  The image of the illustration of a Pangolin used on this page [came from Wikimedia](https://commons.wikimedia.org/wiki/File:PholidotusAfricanusWolf.jpg) and was originally created by Joseph Wolf and published in the Proceedings of the Zoological Society of London, 1865.
