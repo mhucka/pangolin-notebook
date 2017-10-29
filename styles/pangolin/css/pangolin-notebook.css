@@ -9,22 +9,22 @@ Source      : https://github.com/mhucka/pangolin-notebook
 */
 
 body {
-    padding-top: 60px;
-    padding-bottom: 40px;
+  padding-top: 60px;
+  padding-bottom: 40px;
 }
 
 .main-toc ul
 {
-    list-style-type: none;
+  list-style-type: none;
 }
 
 #TOC
 {
-    display: none;
+  display: none;
 }
 
 /* This is needed to make jumping to in-page anchors from the nav bar work
-as expected.  Without this, the heading text appears underneath the nav bar. */
+   as expected.  Without this, the heading text appears underneath the nav bar. */
 
 h1 {
   font-size: 2em;
@@ -40,61 +40,61 @@ h3 {
 }
 
 h2, h3, h4 {
-    padding-top: 60px;
-    margin-top: -60px;
+  padding-top: 60px;
+  margin-top: -60px;
 }
 
 .dropdown-menu li a {
-    line-height: 1.2;
+  line-height: 1.2;
 }
 
 span.section-number {
-    margin-right: 1ex;
+  margin-right: 1ex;
 }
 
 span.header-section-number {
-    margin-right: 1ex;
+  margin-right: 1ex;
 }
 
 li.headline {
-    font-weight: bold;
-    font-size: larger;
+  font-weight: bold;
+  font-size: larger;
 }
 
 .main-toc li:not(.headline),
 .navbar-nav li:not(.headline) {
-    margin-left: 25px;
+  margin-left: 25px;
 }
 
 .references {
-    margin-top: 2em;
-    padding-top: 0.5em;
-    border-top: 1px solid #aaa;
+  margin-top: 2em;
+  padding-top: 0.5em;
+  border-top: 1px solid #aaa;
 }
 
 .references:before {
-    content: "References";
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 500;
-    line-height: 1.1;
-    font-size: 30px;
-    margin-top: 1em;
-    padding-top: 1em;
+  content: "References";
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.1;
+  font-size: 30px;
+  margin-top: 1em;
+  padding-top: 1em;
 }
 
 /* Bootstrap's styling of <p> adds a 10px margin below, but it doesn't
    define it for <center>.  This seems useful to make things more consistent.
-*/
+ */
 center {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 /* Extra styles for the notebook.
-*/
+ */
 .date-tag {
-    clear: both;
-    font-size: 0.75em;
-    font-style: italic;
-    line-height: 1.75;
-    color: #666666;
+  clear: both;
+  font-size: 0.75em;
+  font-style: italic;
+  line-height: 1.75;
+  color: #666666;
 }
