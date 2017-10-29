@@ -9,13 +9,16 @@ Source      : https://github.com/mhucka/pangolin-notebook
 */
 
 body {
-  padding-top: 60px;
+  font-family: 'Open Sans', sans-serif;
+  padding-top: 40px;
   padding-bottom: 40px;
+  color: #555;
 }
 
-.main-toc ul
+.toc
 {
   list-style-type: none;
+  margin-left: -2em;
 }
 
 #TOC
@@ -27,16 +30,31 @@ body {
    as expected.  Without this, the heading text appears underneath the nav bar. */
 
 h1 {
-  font-size: 2em;
+  font-family: 'Lato', sans-serif;
+  font-weight: bold;
+  font-size: 1.75em;
+  color: black;
+}
+
+h1.title {
+  text-align: center;
 }
 
 h2 {
-  font-size: 1.75em;
+  font-size: 1.25em;
+  color: black;
 }
 
+h2.subtitle {
+  text-align: center;
+  margin-left: 4em;
+  margin-right: 4em;
+  color #555;
+  font-style: italic;
+}
 
 h3 {
-  font-size: 1.5em;
+  font-size: 1em;
 }
 
 h2, h3, h4 {
@@ -74,7 +92,6 @@ li.headline {
 
 .references:before {
   content: "References";
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 500;
   line-height: 1.1;
   font-size: 30px;
@@ -91,10 +108,34 @@ center {
 
 /* Extra styles for the notebook.
  */
+h3.date {
+  font-size: 1em;
+  font-style: italic;
+  text-align: center;
+}
+
+.date:before {
+  content: "Last modified: ";
+}
+
 .date-tag {
   clear: both;
   font-size: 0.75em;
   font-style: italic;
   line-height: 1.75;
   color: #666666;
+}
+
+.authors {
+  text-align: center;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.authors .author {
+  line-height: 0.5em;
+}
+
+.article-list {
+  font-size: 1.1em;
 }
