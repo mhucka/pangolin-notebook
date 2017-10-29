@@ -1,3 +1,13 @@
+/*
+==============================================================================
+Description : Default styling for Pangolin Notebook
+Author(s)   : Michael Hucka <mhucka@caltech.edu>
+Organization: California Institute of Technology
+Date created: June 2014
+Source      : https://github.com/mhucka/pangolin-notebook
+==============================================================================
+*/
+
 body {
     padding-top: 60px;
     padding-bottom: 40px;
