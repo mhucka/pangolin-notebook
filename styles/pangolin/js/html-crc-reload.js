@@ -10,7 +10,10 @@
   Thanks to Andrea Ercolino for providing the javascript crc32 functionality
   http://noteslog.com/post/crc32-for-javascript/
 
-  MODIFIED BY: mhucka@caltech.edu in June 2014.
+  MODIFIED BY: mhucka@caltech.edu
+  Oct 2017:
+  - Only run on local host
+  June 2014:
   - Changed to use a different, hopefully faster crc32 function.
   - Reformatted the code.
   - Commented out some code that looks questionable.
@@ -19,18 +22,21 @@
 */
 
 /* Polling period, in seconds. */
-var cacheRefreshPeriod = 10;
+var cacheRefreshPeriod = 2;
 
 $(function() {
-    // Only run for local files.
-    if (location.hostname === "localhost"
-        || location.hostname === "127.0.0.1"
-        || location.hostname === "")
-    {
+    if (runningLocally()) {
         check(true);
         setInterval('check()', 1000 * cacheRefreshPeriod);
-    };
+    }
 });
+
+function runningLocally() {
+    return (location.hostname === "localhost"
+            || location.hostname === "127.0.0.1"
+            || location.hostname === ""
+            || window.location.protocol === "file:");
+}
 
 var previousCrc = 0;
 
