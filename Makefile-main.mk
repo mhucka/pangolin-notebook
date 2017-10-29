@@ -159,6 +159,7 @@ $(index-file): $(doc-template) $(toc-template)
 	done;
 	echo '</ul>' >> $(toc)
 	pandoc $(doc-args) $(front-page-file) | contents=`cat $(toc)` envsubst '$$contents' > $(index-file)
+	-rm -f $(toc) $(navbar)
 
 $(output-dir)/%.html: $(contents-dir)/%.md
 	pandoc $(doc-args) $< -o $@
