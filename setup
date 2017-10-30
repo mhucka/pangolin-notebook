@@ -1,0 +1,126 @@
+#!/bin/bash
+# =============================================================================
+# @file    setup.sh
+# @brief   Set up a new Pangolin Notebook directory
+# @author  Michael Hucka <mhucka@caltech.edu>
+# @license Please see the file named LICENSE in the Pangolin Notebook diretory
+# @website https://github.com/mhucka/pangolin-notebook
+# =============================================================================
+
+program=${0##*/}
+cwd=`/bin/pwd -P`
+pangolin_path="$cwd/pangolin-notebook"
+ignore_template="$pangolin_path/templates/dot.gitignore"
+
+# Functions.
+# .............................................................................
+
+print_usage() {
+cat <<EOF >&2
+Usage:
+    $program [-h] [-p]
+
+This script is used to initialize a Pangolin Notebook user's directory.
+It assumes that the current directory is the user's notebook directory,
+and that the Pangolin Notebook directory is a subdirectory named
+'pangolin-notebook'.  If that is not the case, use the -s option to
+indicate the actual path to your copy of Pangolin Notebook.
+
+Options:
+    -h, --help          Print this help message and exit
+    -p, --pangolin      Path to the Pangolin Notebok directory
+
+EOF
+}
+
+parse_args() {
+    # Parse comand-line options.
+
+    while (( $# > 0 )); do
+        case $1 in
+            -p | --pangolin )
+                shift
+                pangolin_path=$1
+                ;;
+            -h | --help )
+                print_usage
+                exit 0
+                ;;
+            *)
+                print_usage
+                exit 1
+                ;;
+        esac
+        shift
+    done
+}
+
+say() {
+    # Takes 2 arguments: a severity code, and a text string.
+    # Prints a message to the terminal, unless the code is "note"
+    # and $chatty is not 1.  Always logs the message.
+    # Optional 3rd argument can be "-n" to prevent newline.
+
+    local code=$1
+    local msg=$2
+    local nonewline=$3
+
+    local RED=`tput setaf 1`
+    local GREEN=`tput setaf 2`
+    local YELLOW=`tput setaf 3`
+    local RESET=`tput sgr0`
+
+    if [[ -z "$nonewline" ]]; then
+        newline="\n"
+    else
+        newline=
+    fi
+
+    case $code in
+        info)
+            if $chatty; then
+                printf "${GREEN}%s${RESET}${newline}" "$2"
+            fi
+            ;;
+        warning)
+            printf "${YELLOW}%s${RESET}${newline}" "$2"
+            ;;
+        error)
+            printf "${RED}%s${RESET}${newline}" "$2"
+            ;;
+    esac
+}
+
+check_dirs() {
+    if [[ -e Makefile-main.mk && -e styles && -e templates ]]; then
+        say error "Very sorry for the trouble, but this script should NOT be"
+        say error "executed from within the Pangolin Notebook source directory"
+        say error "itself. Please run this script from your actual notebook"
+        say error "directory instead."
+        exit 1
+    fi
+}
+
+copy_files() {
+    say info "Copying template Makefile."
+    cp -i "$pangolin_path/Makefile" "$cwd"
+    if [[ -e .gitignore ]]; then
+        say info "Appending to .gitignore file."
+        grep -v '^## ' $ignore_template >> .gitignore
+    else
+        say info "Creating .gitignore file."
+        cp -i $ignore_template .gitignore
+    fi
+}
+
+# Sanity checks.
+# .............................................................................
+
+# Main entry point.
+
+parse_args "$@"
+check_dirs
+copy_files
+say info "Done."
+
+exit 0
