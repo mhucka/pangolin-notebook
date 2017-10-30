@@ -17,7 +17,7 @@ body {
 
 .toc
 {
-  list-style-type: none;
+  list-style-type: square;
   margin-left: -2em;
 }
 
@@ -137,5 +137,5 @@ h3.date {
 }
 
 .article-list {
-  font-size: 1.1em;
+  margin-left: 2em;
 }
