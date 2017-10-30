@@ -101,6 +101,7 @@ doc-args = \
 	--email-obfuscation=none \
 	--mathjax \
         --metadata link-citations=true \
+	--metadata date="`date "+%B %e, %Y"`" \
 	--include-before-body=$(navbar) \
 	--template=$(doc-template) \
 	--data-dir $(notebook-dir) \
@@ -114,6 +115,7 @@ toc-args = \
 	--number-sections \
 	--toc \
 	--toc-depth=1 \
+	--metadata date="`date "+%B %e, %Y"`" \
 	--template=$(toc-template)
 
 index-args = \
