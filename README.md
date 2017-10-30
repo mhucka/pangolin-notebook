@@ -36,16 +36,6 @@ The basic approach to setting up Pangolin Notebook is to create a fresh director
 
 1. Create a directory for your notebook
 2. `cd` into that directory
-3. Run the command `git clone git@github.com:mhucka/pangolin-notebook.git`
-4. Run the command `cp pangolin-notebook/Makefile .` (note the trailing `.` is necessary!)
-5. Edit the `Makefile` to change configuration variable values as needed
-6. Create a subdirectory for your contents (perhaps call it `contents`)
-7. Create a table of contents file (perhaps call it `TABLE-OF-CONTENTS`)
-
-If you are going to use GitHub to share your notebook source files and GitHub Pages to share the formatted notebook, the steps are only slightly more involved:
-
-1. Create a directory for your notebook
-2. `cd` into that directory
 3. Run the command `git init`
 4. Run the command `git submodule add https://github.com/mhucka/pangolin-notebook.git`
 5. Run the command `./pangolin-notebook/setup`
