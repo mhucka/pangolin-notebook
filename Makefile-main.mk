@@ -153,8 +153,8 @@ $(index-file): $(front-page-file) $(input-files) $(contents-file)
 $(index-file): $(doc-template) $(toc-template)
 	echo '<ul class="toc">' > $(toc)
 	for file in $(input-filenames); do \
-	    html="$(output-dir)/$${file/.md/.html}"; \
-	    pandoc $(doc-args) $(input-dir)/$$file -o $$html; \
+	    html="$${file/.md/.html}"; \
+	    pandoc $(doc-args) $(input-dir)/$$file -o $(output-dir)/$$html; \
 	    title=`grep 'title:' $(input-dir)/$$file | cut -f2 -d':'`; \
 	    echo "<li><a href=\"$$html\"><span class=\"toc-entry\">" $$title "</span></a></li>" >> $(toc); \
 	done;
