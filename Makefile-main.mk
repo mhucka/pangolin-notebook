@@ -152,11 +152,10 @@ $(navbar): $(nav-template) $(contents-file)
 $(index-file): $(front-page-file) $(input-files) $(contents-file)
 $(index-file): $(doc-template) $(toc-template)
 	echo '<ul class="toc">' > $(toc)
-	for file in $(input-files); do \
-	    html="$${file/$(contents-dir)/$(output-dir)}"; \
-	    html="$${html/.md/.html}"; \
-	    pandoc $(doc-args) $$file -o $$html; \
-	    title=`grep 'title:' $$file | cut -f2 -d':'`; \
+	for file in $(input-filenames); do \
+	    html="$(output-dir)/$${file/.md/.html}"; \
+	    pandoc $(doc-args) $(input-dir)/$$file -o $$html; \
+	    title=`grep 'title:' $(input-dir)/$$file | cut -f2 -d':'`; \
 	    echo "<li><a href=\"$$html\"><span class=\"toc-entry\">" $$title "</span></a></li>" >> $(toc); \
 	done;
 	echo '</ul>' >> $(toc)
