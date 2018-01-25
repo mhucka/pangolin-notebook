@@ -100,6 +100,28 @@
         <key macro="issued" sort="ascending"/>
     </sort>
   </citation>
+  <macro name="issued">
+    <choose>
+      <if variable="issued">
+        <group prefix=" " suffix=".">
+          <date variable="issued">
+            <date-part name="year"/>
+          </date>
+          <choose>
+            <if type="article-journal bill book chapter graphic legal_case legislation motion_picture paper-conference report song" match="none">
+              <date variable="issued">
+                <date-part prefix=", " name="month"/>
+                <date-part prefix=" " name="day"/>
+              </date>
+            </if>
+          </choose>
+        </group>
+      </if>
+      <else>
+        <text prefix=" (" term="in press" suffix=")."/>
+      </else>
+    </choose>
+  </macro>
   <bibliography et-al-min="100" et-al-use-first="10" hanging-indent="true">
     <sort>
       <key macro="author"/>
