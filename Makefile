@@ -33,15 +33,10 @@
 ##
 ## ----------------------------------------------------------------------------
 
-# A file that lists, on separate lines, each file to be made part of the
-# notebook.  The order in which the files are listed in this file is the
-# order in which the pages will be put in the table of contents.  (Also see
-# the variable "front-page" below.)
-
-contents-list = TABLE-OF-CONTENTS
-
-# The directory containing the content files.  This directory should also
-# contain the "front-page" and "about" page files (see below).
+# The directory containing your content.  This directory should also contain
+# the "front-page" and "about" page files (see below) and a file named
+# "TABLE-OF-CONTENTS".  The TABLE-OF-CONTENTS file must list, on separate
+# lines, each file to be made part of the notebook, in the order desired.
 
 contents-dir = contents
 
