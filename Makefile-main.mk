@@ -21,6 +21,10 @@
 # These can be changed, but doing so can have unexpected consequences, so
 # they are slightly hidden in this second-level makefile.
 
+# The name of the TOC file.  This is expected to be in the contents directory.
+
+contents-list = TABLE-OF-CONTENTS
+
 # The style used for formatting bibliographies.  The file will be found in
 # the "styles" subdirectory of wherever the Pangolin Notebook files are.
 
@@ -40,7 +44,7 @@ input-dir       := $(notebook-dir)/$(contents-dir)
 
 # Inputs
 
-contents-file   := $(notebook-dir)/$(contents-list)
+contents-file   := $(input-dir)/$(contents-list)
 input-filenames := $(shell grep -v "^\s*\#|$(front-page)|$(about-page)" $(contents-file))
 input-files     := $(patsubst %,$(input-dir)/%,$(input-filenames))
 bib-files	:= $(wildcard $(input-dir)/*.bibtex)
@@ -137,7 +141,7 @@ nav-args = \
 
 # Action rules.
 
-default: | create-dirs $(navbar) $(style-files)
+default: | create-dirs $(navbar) $(style-files) copy-media-files
 default: $(index-file) $(output-files) $(contents-file) $(about-file)
 
 create-dirs:
@@ -167,6 +171,11 @@ $(output-dir)/%.html: $(contents-dir)/%.md
 $(about-file): $(about-page-file)
 	pandoc $(doc-args) $< -o $@
 
+copy-media-files: $(wildcard $(contents-dir)/*.svg) \
+	$(wildcard $(contents-dir)/*.jpg) $(wildcard $(contents-dir)/*.png) \
+	$(wildcard $(contents-dir)/*.pdf)
+	cp -rp $? $(output-dir)
+
 $(output-dir)/css/%.css: $(styles-dir)/bootstrap/css/%.css
 	cp -rp $(styles-dir)/bootstrap/css/$(notdir $<) $(output-dir)/css/$(notdir $<)
 
@@ -193,7 +202,7 @@ watch-files := $(input-files) $(front-page-file) $(about-page-file) \
 		$(bib-style-csl) $(css-files-src) $(js-files-src) $(font-files-src)
 
 autorefresh:;
-	((ls $(watch-files) | entr make) &)
+	((fswatch -0 -o $(contents-dir) | xargs -0 -I {} make) &)
 
 .PHONY: create-dirs
 
