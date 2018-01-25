@@ -13,6 +13,13 @@ body {
   padding-top: 40px;
   padding-bottom: 40px;
   color: #555;
+  text-align: justify;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  -o-hyphens: auto;
+  word-break:break-word;
+  hyphens: auto;
 }
 
 .toc
@@ -62,6 +69,10 @@ h2, h3, h4 {
   margin-top: -60px;
 }
 
+ol li {
+  margin-top: 0.5em;
+}
+
 .dropdown-menu li a {
   line-height: 1.2;
 }
@@ -84,19 +95,14 @@ li.headline {
   margin-left: 25px;
 }
 
-.references {
+h1#references {
+  border-top: 1px solid #aaa;
   margin-top: 2em;
   padding-top: 0.5em;
-  border-top: 1px solid #aaa;
 }
 
-.references:before {
-  content: "References";
-  font-weight: 500;
-  line-height: 1.1;
-  font-size: 30px;
-  margin-top: 1em;
-  padding-top: 1em;
+.references span {
+  color: black;
 }
 
 /* Bootstrap's styling of <p> adds a 10px margin below, but it doesn't
@@ -138,4 +144,23 @@ h3.date {
 
 .article-list {
   margin-left: 2em;
+}
+
+figcaption {
+  font-style: italic;
+  font-size: smaller;
+  font-color: #666666;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  padding-top: 1.5em;
+  text-align: justify;
+}
+
+figure {
+  padding: 1em 0 1em 0;
+}
+
+figure img {
+  padding: auto auto 1em auto;
 }
