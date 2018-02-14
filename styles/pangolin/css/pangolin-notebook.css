@@ -8,6 +8,8 @@ Source      : https://github.com/mhucka/pangolin-notebook
 ==============================================================================
 */
 
+@import url("//fonts.googleapis.com/css?family=Source+Code+Pro:600");
+
 body {
   font-family: 'Open Sans', sans-serif;
   padding-top: 40px;
@@ -18,7 +20,7 @@ body {
   -moz-hyphens: auto;
   -ms-hyphens: auto;
   -o-hyphens: auto;
-  word-break:break-word;
+  word-break: break-word;
   hyphens: auto;
 }
 
@@ -58,10 +60,22 @@ h2.subtitle {
   margin-right: 4em;
   color #555;
   font-style: italic;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  -o-hyphens: none;
+  hyphens: none;
 }
 
 h3 {
   font-size: 1em;
+}
+
+/* The default code font size looks oversized to my eyes. */
+pre, code {
+  font-family: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
+  color: black;
+  background-color: #edf0ed;
 }
 
 h2, h3, h4 {
@@ -155,10 +169,14 @@ figcaption {
   width: 80%;
   padding-top: 1.5em;
   text-align: justify;
+  /* The following doesn't work in Safari. */
+  text-align-last: center;
+  -moz-text-align-last: center;
 }
 
 figure {
   padding: 1em 0 1em 0;
+  text-align: center;
 }
 
 figure img {
