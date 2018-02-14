@@ -97,10 +97,9 @@ style-files     := $(css-files) $(js-files) $(font-files)
 # Arguments to pandoc
 
 doc-args = \
-	-f markdown \
+	-f markdown+smart \
 	-t html \
 	--standalone \
-	--smart \
 	--number-sections \
 	--email-obfuscation=none \
 	--mathjax \
@@ -113,9 +112,8 @@ doc-args = \
 	$(patsubst %,--bibliography %,$(bib-files))
 
 toc-args = \
-	-t html \
+	-t html+smart \
 	--standalone \
-	--smart \
 	--number-sections \
 	--toc \
 	--toc-depth=1 \
@@ -123,17 +121,15 @@ toc-args = \
 	--template=$(toc-template)
 
 index-args = \
-	-t html \
+	-t html+smart \
 	--standalone \
-	--smart \
 	--toc \
 	--toc-depth=1 \
 	--template=$(toc-template)
 
 nav-args = \
-	-t html \
+	-t html+smart \
 	--standalone \
-	--smart \
 	--variable about_page="$(about-page:.md=.html)" \
 	--variable notebook_url="$(notebook-url)" \
 	--variable source_url="$(source-url)" \
