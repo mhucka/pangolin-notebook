@@ -8,6 +8,7 @@
 ##
 ## NOTE -- NOTE -- NOTE -- NOTE -- NOTE -- NOTE -- NOTE -- NOTE -- NOTE -- NOTE
 ##
+## THIS FILE IS NOT MEANT TO BE EDITED. There is no user-configurable content.
 ## This makefile assumes that it is being included by another makefile that
 ## sets necessary variable values.  This makefile is incomplete by itself.
 ##
@@ -15,37 +16,18 @@
 ##
 ## ----------------------------------------------------------------------------
 
-
-# Advanced customization variables.
-# .............................................................................
-# These can be changed, but doing so can have unexpected consequences, so
-# they are slightly hidden in this second-level makefile.
+# First read the config file and set Make variables.  This uses a hack: the
+# line to set variable "trigger-parsing" causes Make to execute a command that
+# includes calling 'eval', which sets values in the running Make process.
 
-# The name of the TOC file.  This is expected to be in the contents directory.
-
-contents-list = TABLE-OF-CONTENTS
-
-# The style used for formatting bibliographies.  The file will be found in
-# the "styles" subdirectory of wherever the Pangolin Notebook files are.
-
-bib-style = modified-acm-siggraph.csl
-
-# The template for individual notebook pages.  The file will be found in
-# the "templates" subdirectory of wherever the Pangolin Notebook files are.
-
-page-template = pangolin-page.html
-
-
-# Main code -- no more customization variables after this point
-# .............................................................................
-
-pangolin-dir	:= $(notebook-dir)/$(pangolin-notebook)
-input-dir       := $(notebook-dir)/$(contents-dir)
+config          := $(notebook-dir)/pangolin.yml
+trigger-parsing := $(foreach v,$(shell . $(pangolin)/yaml.sh; parse_yaml $(config)),$(eval $v))
 
 # Inputs
 
-contents-file   := $(input-dir)/$(contents-list)
-input-filenames := $(shell grep -v "^\s*\#|$(front-page)|$(about-page)" $(contents-file))
+input-dir       := $(notebook-dir)/$(content-dir)
+input-filenames := $(filter-out $(front-page),$(content-pages))
+input-filenames := $(filter-out $(about-page),$(input-filenames))
 input-files     := $(patsubst %,$(input-dir)/%,$(input-filenames))
 bib-files	:= $(wildcard $(input-dir)/*.bibtex)
 front-page-file := $(input-dir)/$(front-page)
@@ -53,25 +35,22 @@ about-page-file := $(input-dir)/$(about-page)
 
 # Outputs
 
-index-file	:= $(output-dir)/index.html
-about-file      := $(output-dir)/$(about-page:.md=.html)
+index-file	:= $(notebook-dir)/index.html
+
+output-dir      := $(notebook-dir)/$(content-dir)
 output-files	:= $(patsubst %,$(output-dir)/%,$(input-filenames:.md=.html))
+about-file      := $(output-dir)/$(about-page:.md=.html)
 
 # Templates
 
-doc-template	:= $(pangolin-dir)/templates/$(page-template)
-toc-template	:= $(pangolin-dir)/templates/pangolin-toc.html
-nav-template	:= $(pangolin-dir)/templates/pangolin-navbar.html
-bib-style-csl	:= $(pangolin-dir)/styles/citation-styles/$(bib-style)
+doc-template	:= $(pangolin)/templates/pangolin-page.html
+toc-template	:= $(pangolin)/templates/pangolin-toc.html
+nav-template	:= $(pangolin)/templates/pangolin-navbar.html
+bib-style-csl	:= $(pangolin)/styles/citation-styles/$(bib-style)
 
-# Temp files
+# Files that create the look & feel of Pangolin Notebook.
 
-navbar          := _nav.html
-toc             := _toc.html
-
-# Style files
-
-styles-dir      := $(pangolin-notebook)/styles
+styles-dir      := $(pangolin)/styles
 
 css-files-src   := $(styles-dir)/pangolin/css/pangolin-notebook.css \
 		   $(styles-dir)/bootstrap/css/bootstrap-theme.min.css \
@@ -92,7 +71,10 @@ css-files       := $(addprefix $(output-dir)/css/,$(notdir $(css-files-src)))
 js-files        := $(addprefix $(output-dir)/js/,$(notdir $(js-files-src)))
 font-files      := $(addprefix $(output-dir)/fonts/,$(notdir $(font-files-src)))
 
-style-files     := $(css-files) $(js-files) $(font-files)
+# Temp files
+
+navbar          := _nav.html
+toc             := _toc.html
 
 # Arguments to pandoc
 
@@ -106,71 +88,60 @@ doc-args = \
         --metadata link-citations=true \
 	--metadata date="`date "+%B %e, %Y"`" \
 	--include-before-body=$(navbar) \
+	--variable content-dir="$(content-dir)" \
 	--template=$(doc-template) \
 	--data-dir $(notebook-dir) \
 	--csl=$(bib-style-csl) \
 	$(patsubst %,--bibliography %,$(bib-files))
 
-toc-args = \
-	-t html+smart \
-	--standalone \
-	--number-sections \
-	--toc \
-	--toc-depth=1 \
-	--metadata date="`date "+%B %e, %Y"`" \
-	--template=$(toc-template)
-
-index-args = \
-	-t html+smart \
-	--standalone \
-	--toc \
-	--toc-depth=1 \
-	--template=$(toc-template)
-
 nav-args = \
 	-t html+smart \
 	--standalone \
-	--variable about_page="$(about-page:.md=.html)" \
+	--variable about_page="$(content-dir)/$(about-page:.md=.html)" \
 	--variable notebook_url="$(notebook-url)" \
 	--variable source_url="$(source-url)" \
+	--title="navbar" \
 	--template=$(nav-template)
 
 # Action rules.
 
-default: | create-dirs $(navbar) $(style-files) copy-media-files
-default: $(index-file) $(output-files) $(contents-file) $(about-file)
+default: | create-dirs $(navbar) $(css-files) $(js-files) $(font-files)
+default: $(index-file) $(output-files) $(about-file) $(config)
 
-create-dirs:
-	mkdir -p $(output-dir)
-	mkdir -p $(output-dir)/css
-	mkdir -p $(output-dir)/js
-	mkdir -p $(output-dir)/fonts
-
-$(navbar): $(nav-template) $(contents-file)
+$(navbar): $(nav-template) $(config)
 	pandoc $(nav-args) $(nav-template) -o $(navbar)
 
-$(index-file): $(front-page-file) $(input-files) $(contents-file)
+$(index-file): $(front-page-file) $(input-files) $(config)
 $(index-file): $(doc-template) $(toc-template)
 	echo '<ul class="toc">' > $(toc)
 	for file in $(input-filenames); do \
-	    html="$${file/.md/.html}"; \
-	    pandoc $(doc-args) $(input-dir)/$$file -o $(output-dir)/$$html; \
+	    html="${content-dir}/$${file/.md/.html}"; \
+	    pandoc $(doc-args) $(input-dir)/$$file -o $$html; \
 	    title=`grep 'title:' $(input-dir)/$$file | cut -f2 -d':'`; \
 	    echo "<li><a href=\"$$html\"><span class=\"toc-entry\">" $$title "</span></a></li>" >> $(toc); \
 	done;
 	echo '</ul>' >> $(toc)
 	pandoc $(doc-args) $(front-page-file) | contents=`cat $(toc)` envsubst '$$contents' > $(index-file)
 
-$(output-dir)/%.html: $(contents-dir)/%.md
+$(output-dir)/%.html: $(content-dir)/%.md $(config)
 	pandoc $(doc-args) $< -o $@
 
-$(about-file): $(about-page-file)
+$(about-file): $(about-page-file) $(config)
 	pandoc $(doc-args) $< -o $@
 
-copy-media-files: $(wildcard $(contents-dir)/*.svg) \
-	$(wildcard $(contents-dir)/*.jpg) $(wildcard $(contents-dir)/*.png) \
-	$(wildcard $(contents-dir)/*.pdf)
-	cp -rp $? $(output-dir)
+create-dirs: $(output-dir)/css $(output-dir)/js $(output-dir)/fonts $(output-dir)/$(content-dir)
+
+$(output-dir)/css:
+	mkdir -p $(output-dir)/css
+
+$(output-dir)/js:
+	mkdir -p $(output-dir)/js
+
+$(output-dir)/fonts:
+	mkdir -p $(output-dir)/fonts
+
+$(output-dir)/$(content-dir):
+	(cd $(output-dir); rm -f $(content-dir); ln -s . $(content-dir))
 
 $(output-dir)/css/%.css: $(styles-dir)/bootstrap/css/%.css
 	cp -rp $(styles-dir)/bootstrap/css/$(notdir $<) $(output-dir)/css/$(notdir $<)
@@ -188,20 +159,17 @@ $(output-dir)/fonts/%: $(styles-dir)/bootstrap/fonts/%
 	cp -rp $(styles-dir)/bootstrap/fonts/$(notdir $<) $(output-dir)/fonts/$(notdir $<)
 
 clean:
-	-rm -f $(output-files) $(index-file) $(navbar) $(toc) $(about-file) \
-		$(style-files)
-	-rmdir $(output-dir)/css $(output-dir)/js $(output-dir)/fonts
-	-rmdir $(output-dir)
+	-rm -f $(output-files) $(index-file) $(navbar) $(toc) $(about-file)
 
-watch-files := $(input-files) $(front-page-file) $(about-page-file) \
+watch-files := $(input-files) $(front-page-file) $(about-page-file) $(config) \
 		$(doc-template) $(toc-template) $(nav-template) \
 		$(bib-style-csl) $(css-files-src) $(js-files-src) $(font-files-src)
 
+# Autorefresh excludes Emacs backup files, checkpoint files, and the HTML
+# files (because make would otherwise run twice every time it generated
+# a new HTML file).
+
 autorefresh:;
-	((fswatch -0 -o $(contents-dir) | xargs -0 -I {} make) &)
+	((fswatch -0 -o -I -e '*~' -e '\.#.*' -e '.*\.html' $(content-dir) $(config) | xargs -0 -I {} make) &)
 
 .PHONY: create-dirs
-
-
-# End.
-# .............................................................................
