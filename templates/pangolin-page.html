@@ -11,27 +11,26 @@
     <meta name="generator" content="pandoc" />
 
     <!-- Start of Bootstrap 3 code. -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="$content-dir$/css/bootstrap.min.css" rel="stylesheet">
+    <link href="$content-dir$/css/bootstrap-theme.min.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-      <script src="js/html5shiv.js"></script>
+      <script src="$content-dir$/js/html5shiv.js"></script>
     <![endif]-->
 
     <!-- Fav and touch icons -->
-    <link rel="shortcut icon" href="img/favicon.png">
+    <link href="$content-dir$/img/favicon.png" rel="shortcut icon">
 
-    <script type="text/javascript" src="js/jquery.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script src="$content-dir$/js/jquery.min.js" type="text/javascript"></script>
+    <script src="$content-dir$/js/bootstrap.min.js" type="text/javascript"></script>
     <!-- End of Bootstrap 3 code. -->
 
-    <!-- Start additional styling for the notebook. -->
-    <link href="css/pangolin-notebook.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i&amp;subset=latin-ext" rel="stylesheet">
-
     <!-- Auto-reload page if source has changed -->
-    <script type="text/javascript" src="js/html-crc-reload.js"></script>
+    <script src="$content-dir$/js/html-crc-reload.js" type="text/javascript"></script>
+
+    <!-- Additional styling for the notebook. -->
+    <link href="$content-dir$/css/pangolin-notebook.css" rel="stylesheet">
 
     <!-- Try to tell browsers not to cache this file. -->
     <meta http-equiv="cache-control" content="max-age=0" />
@@ -45,7 +44,6 @@
     $for(author-meta)$
     <meta name="author" content="$author-meta$" />
     $endfor$
-
     $if(date-meta)$
     <meta name="date" content="$date-meta$" />
     <meta name="dcterms.date" content="$date-meta$">
@@ -68,7 +66,7 @@
     $endif$
 
     $for(css)$
-    <link rel="stylesheet" href="$css$" $if(html5)$$else$type="text/css" $endif$/>
+    <link href="$content-dir$/$css$" rel="stylesheet" $if(html5)$$else$type="text/css" $endif$/>
     $endfor$
 
     $if(math)$
