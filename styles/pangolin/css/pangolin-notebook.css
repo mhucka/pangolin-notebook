@@ -8,7 +8,8 @@ Source      : https://github.com/mhucka/pangolin-notebook
 ==============================================================================
 */
 
-@import url("//fonts.googleapis.com/css?family=Source+Code+Pro:600");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i&amp;subset=latin-ext");
+@import url("https://fonts.googleapis.com/css?family=Source+Code+Pro:600");
 
 body {
   font-family: 'Open Sans', sans-serif;
@@ -107,6 +108,14 @@ li.headline {
 .main-toc li:not(.headline),
 .navbar-nav li:not(.headline) {
   margin-left: 25px;
+}
+
+.toc li {
+  margin-top: 0.5em;
+}
+
+.article-list.toc li {
+  margin-top: 1em;
 }
 
 h1#references {
