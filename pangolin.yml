@@ -1,0 +1,54 @@
+# =============================================================================
+# This is the configuration file for a Pangolin Notebook installation.
+# Change the values below to suit your preferences and particular notebook.
+# For more information, please visit http://github.com/mhucka/pangolin-notebook
+# =============================================================================
+
+# The following variable lists the pages that are included in the notebook.
+# The order is significant: the order in which files are listed here is the
+# order in which they will be inserted by the string "$contents" on the front
+# page (see below).  Precede each file name in the following list with a
+# space-dash-space character sequence, as shown in the examples below.
+# Remember to update this every time you add another content file!
+
+content-pages:
+ - page1.md
+ - page2.md
+ - page3.md
+
+# The following indicates the directory containing the pages listed above.
+# Formatted output will be produced in the same directory.
+
+content-dir: contents
+
+# The next variable determines which input file is used to produce the front
+# page of the formatted notebook (i.e., index.html).  The text inside this
+# file should contain one instance of the literal string "$contents" (without
+# the quotes) to indicate where the table of contents should be placed on the
+# page.  The rest of the page content is up to you.  Make sure to put this
+# file inside the contents-dir location indicated above.
+
+front-page: front.md
+
+# The next variable determines which of the input files is used as the basis
+# of the "About" page for the notebook.  Make sure to put this file inside
+# the contents-dir location indicated above.
+
+about-page: about.md
+
+# The URL to the live, online notebook.  If you are using GitHub Pages, this
+# will be something like "https://yourlogin.github.io/yournotebook".
+
+notebook-url: CHANGE-THIS-TO-YOUR-NOTEBOOK-URL
+
+# (Optional) The URL to the source repo for your notebook, if you want to show
+# this in the navigation bar.  This can be, for example, the GitHub repo URL.
+# Leave empty if the resource repo is not public.
+
+source-url:   CHANGE-THIS-TO-YOUR-REPOSITORY-URL
+
+# (Optional) Select a different bibliography format style.  The value of
+# this next variable must be a file located in the "styles/citation-styles"
+# subdirectory of Pangolin Notebook.
+
+bib-style: modified-acm-siggraph.csl
