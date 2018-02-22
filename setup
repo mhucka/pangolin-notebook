@@ -101,9 +101,22 @@ check_dirs() {
     fi
 }
 
+check_existing() {
+    for file in Makefile pangolin.yml; do
+        if [[ -e $file ]]; then
+            say error "Found an existing copy of file '$file'. Quitting now"
+            say error "to avoid overwriting an existing installation. Please move"
+            say error "the file out of the way and run 'setup' again."
+            exit 1
+        fi
+    done
+}
+
 copy_files() {
     say info "Copying template Makefile."
     cp -i "$pangolin_path/Makefile" "$cwd"
+    say info "Copying template Pangolin configuration file."
+    cp -i "$pangolin_path/pangolin.yml" "$cwd"
     if [[ -e .gitignore ]]; then
         say info "Appending to .gitignore file."
         grep -v '^## ' $ignore_template >> .gitignore
@@ -113,6 +126,49 @@ copy_files() {
     fi
 }
 
+check_dependencies() {
+    problem=false
+    if ! [ -x "$(command -v pandoc)" ]; then
+        say error "Cannot find pandoc -- please check Pandoc is installed."
+        problem=true
+    fi
+    if ! [ -x "$(command -v envsubst)" ]; then
+        say error "Cannot find envsubst -- please check that GNU gettext is installed."
+        problem=true
+    fi
+    if ! [ -x "$(command -v make)" ]; then
+        say error "Cannot find make -- please check GNU Make is installed."
+        problem=true
+    fi
+    mversion=`make --version | grep GNU`
+    if [ -z "$mversion" ]; then
+        say error "The copy of 'make' found does not appear to be GNU Make."
+        say error "Please check GNU Make is installed and runnable as 'make'."
+        problem=true
+    fi
+    if $problem; then
+        say warning "Pangolin Notebook may not function or work as expected."
+        say warning "Please refer to the instructions in the README.md file"
+        say warning "or visit https://github.com/mhucka/pangolin-notebook"
+    fi
+    if ! [ -x "$(command -v fswatch)" ]; then
+        say warning "Cannot find fswatch. This is not fatal, but it will"
+        say warning "prevent 'make autorefresh' from working until fswatch"
+        say warning "is installed."
+    fi
+    unset problem
+}
+
+inform_user() {
+    say info "Done with setup."
+    say info "---------------------------------------------------------------"
+    say info "Next steps:"
+    say info "1. Edit 'pangolin.yml' to configure your notebook"
+    say info "2. Create the directory where you will put your Markdown files"
+    say info "---------------------------------------------------------------"
+}
+
+
 # Sanity checks.
 # .............................................................................
 
@@ -120,7 +176,9 @@ copy_files() {
 
 parse_args "$@"
 check_dirs
+check_existing
 copy_files
-say info "Done."
+check_dependencies
+inform_user
 
 exit 0
