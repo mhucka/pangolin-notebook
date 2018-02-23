@@ -45,7 +45,6 @@ about-file      := $(output-dir)/$(about-page:.md=.html)
 
 doc-template	:= $(pangolin)/templates/pangolin-page.html
 toc-template	:= $(pangolin)/templates/pangolin-toc.html
-nav-template	:= $(pangolin)/templates/pangolin-navbar.html
 bib-style-csl	:= $(pangolin)/styles/citation-styles/$(bib-style)
 
 # Files that create the look & feel of Pangolin Notebook.
@@ -73,7 +72,6 @@ font-files      := $(addprefix $(output-dir)/fonts/,$(notdir $(font-files-src)))
 
 # Temp files
 
-navbar          := _nav.html
 toc             := _toc.html
 
 # Arguments to pandoc
@@ -87,29 +85,19 @@ doc-args = \
 	--mathjax \
         --metadata link-citations=true \
 	--metadata date="`date "+%B %e, %Y"`" \
-	--include-before-body=$(navbar) \
 	--variable content-dir="$(content-dir)" \
+	--variable about-page="$(about-file)" \
+	--variable notebook-url="$(notebook-url)" \
+	--variable source-url="$(source-url)" \
 	--template=$(doc-template) \
 	--data-dir $(notebook-dir) \
 	--csl=$(bib-style-csl) \
 	$(patsubst %,--bibliography %,$(bib-files))
 
-nav-args = \
-	-t html+smart \
-	--standalone \
-	--variable about_page="$(content-dir)/$(about-page:.md=.html)" \
-	--variable notebook_url="$(notebook-url)" \
-	--variable source_url="$(source-url)" \
-	--title="navbar" \
-	--template=$(nav-template)
-
 # Action rules.
 
-default: | create-dirs $(navbar) $(css-files) $(js-files) $(font-files)
+default: | create-dirs $(css-files) $(js-files) $(font-files)
 default: $(index-file) $(output-files) $(about-file) $(config)
-
-$(navbar): $(nav-template) $(config)
-	pandoc $(nav-args) $(nav-template) -o $(navbar)
 
 $(index-file): $(front-page-file) $(input-files) $(config)
 $(index-file): $(doc-template) $(toc-template)
@@ -124,10 +112,10 @@ $(index-file): $(doc-template) $(toc-template)
 	pandoc $(doc-args) $(front-page-file) | contents=`cat $(toc)` envsubst '$$contents' > $(index-file)
 
 $(output-dir)/%.html: $(content-dir)/%.md $(config)
-	pandoc $(doc-args) $< -o $@
+	pandoc --variable page-source-url="$(source-url)/$<" $(doc-args) $< -o $@
 
 $(about-file): $(about-page-file) $(config)
-	pandoc $(doc-args) $< -o $@
+	pandoc --variable page-source-url="$(source-url)/$<" $(doc-args) $< -o $@
 
 create-dirs: $(output-dir)/css $(output-dir)/js $(output-dir)/fonts $(output-dir)/$(content-dir)
 
@@ -159,11 +147,11 @@ $(output-dir)/fonts/%: $(styles-dir)/bootstrap/fonts/%
 	cp -rp $(styles-dir)/bootstrap/fonts/$(notdir $<) $(output-dir)/fonts/$(notdir $<)
 
 clean:
-	-rm -f $(output-files) $(index-file) $(navbar) $(toc) $(about-file)
+	-rm -f $(output-files) $(index-file) $(toc) $(about-file)
 
 watch-files := $(input-files) $(front-page-file) $(about-page-file) $(config) \
-		$(doc-template) $(toc-template) $(nav-template) \
-		$(bib-style-csl) $(css-files-src) $(js-files-src) $(font-files-src)
+		$(doc-template) $(toc-template) $(bib-style-csl) \
+		$(css-files-src) $(js-files-src) $(font-files-src)
 
 # Autorefresh excludes Emacs backup files, checkpoint files, and the HTML
 # files (because make would otherwise run twice every time it generated
