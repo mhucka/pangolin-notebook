@@ -25,6 +25,7 @@ trigger-parsing := $(foreach v,$(shell . $(pangolin)/yaml.sh; parse_yaml $(confi
 
 # Inputs
 
+content-dir     := $(notebook-dir)/contents
 input-dir       := $(notebook-dir)/$(content-dir)
 input-filenames := $(filter-out $(front-page),$(content-pages))
 input-filenames := $(filter-out $(about-page),$(input-filenames))

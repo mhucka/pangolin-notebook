@@ -11,6 +11,9 @@ program=${0##*/}
 cwd=`/bin/pwd -P`
 pangolin_path="$cwd/pangolin-notebook"
 ignore_template="$pangolin_path/templates/dot.gitignore"
+about_template="$pangolin_path/templates/about-template.md"
+front_template="$pangolin_path/templates/front-template.md"
+page_template="$pangolin_path/templates/page-template.md"
 
 # Functions.
 # .............................................................................
@@ -126,6 +129,16 @@ copy_files() {
     fi
 }
 
+create_dirs() {
+    say info "Creating contents directory."
+    mkdir -p contents
+    say info "Creating template front page and about page."
+    cp -i $about_template contents/about.md
+    cp -i $front_template contents/front-page.md
+    cp -i $page_template contents/page-1.md
+    cp -i $page_template contents/page-2.md
+}
+
 check_dependencies() {
     problem=false
     if ! [ -x "$(command -v pandoc)" ]; then
@@ -162,9 +175,7 @@ check_dependencies() {
 inform_user() {
     say info "Done with setup."
     say info "---------------------------------------------------------------"
-    say info "Next steps:"
-    say info "1. Edit 'pangolin.yml' to configure your notebook"
-    say info "2. Create the directory where you will put your Markdown files"
+    say info "Now edit 'pangolin.yml' to configure your notebook"
     say info "---------------------------------------------------------------"
 }
 
@@ -178,6 +189,7 @@ parse_args "$@"
 check_dirs
 check_existing
 copy_files
+create_dirs
 check_dependencies
 inform_user
 
