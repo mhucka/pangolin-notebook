@@ -10,6 +10,7 @@
 program=${0##*/}
 cwd=$(/bin/pwd -P)
 pangolin_path="$cwd/pangolin-notebook"
+contents_dir="docs"
 ignore_template="$pangolin_path/templates/dot.gitignore"
 about_template="$pangolin_path/templates/about-template.md"
 front_template="$pangolin_path/templates/front-template.md"
@@ -128,13 +129,13 @@ copy_files() {
 }
 
 create_dirs() {
-    say info "Creating contents directory."
-    mkdir -p contents
+    say info "Creating $contents_dir directory."
+    mkdir -p "$contents_dir"
     say info "Creating template front page and about page."
-    cp -i "$about_template" contents/about.md
-    cp -i "$front_template" contents/front-page.md
-    cp -i "$page_template" contents/page-1.md
-    cp -i "$page_template" contents/page-2.md
+    cp -i "$about_template" "$contents_dir/about.md"
+    cp -i "$front_template" "$contents_dir/front-page.md"
+    cp -i "$page_template" "$contents_dir/page-1.md"
+    cp -i "$page_template" "$contents_dir/page-2.md"
 }
 
 check_dependencies() {

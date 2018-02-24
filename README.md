@@ -59,9 +59,11 @@ The basic approach to setting up Pangolin Notebook is to create a fresh director
 3. Run the command `git submodule add https://github.com/mhucka/pangolin-notebook.git`
 4. Run the command `./pangolin-notebook/setup`
 
+The setup step will create a new subdirectory called `docs` in which your notebook files are meant to be located.  It will also create a few files as starting templates to help you understand the format.
+
 ### ⓷&nbsp;&nbsp; _Configure Pangolin Notebook_
 
-The last step in the installation above (running `setup`) copies a file named `pangolin.yml` into your notebook directory.  This file needs to be edited to set certain variables, which you can do using any text editor.  The file contains comments that explain the variables; only two variables _must_ be set because Pangolin Notebook cannot figure them out itself:
+The last step in the installation above (running `setup`) copies a file named `pangolin.yml` into your notebook directory.  This file needs to be edited to set certain variables. You can edit it using any text editor.  The file contains comments that explain the variables; only two variables _must_ be set because Pangolin Notebook cannot figure them out itself:
 
 * `content-pages` &ndash; this contains a list of the files that constitute the top-level pages of your notebook.  **You need to update this variable every time you add a new notebook page**.
 * `notebook-url` &ndash; the online URL (e.g., `https://yourlogin.github.io/yournotebook` if you're using GitHub Pages)
@@ -72,11 +74,11 @@ There are some additional variables in `pangolin.yml` that you can set, such as 
 ► Using Pangolin Notebook
 ------------------------
 
-Writing documents is a matter of editing files in [Pandoc-flavored Markdown](https://pandoc.org/MANUAL.html) format (optionally writing references in [BibTeX](http://www.bibtex.org/Format) format and creating figures in any web-viewable format you choose), then running `make` in your notebook directory to (re)generate the HTML files for your notebook contents.  The latter process can be automated using the `make autorefresh` command, which uses a combination of JavaScript inserted into every HTML page and `fswatch` to let you keep a web browser open on your notebook and have it be refreshed automatically each time you save changes to your files.
+Writing documents is a matter of creating and editing in [Pandoc-flavored Markdown](https://pandoc.org/MANUAL.html) format (optionally writing references in [BibTeX](http://www.bibtex.org/Format) format and creating figures in any web-viewable format you choose), then running `make` in your notebook directory to (re)generate the HTML files for your notebook contents.  The latter process can be automated using the `make autorefresh` command, which uses a combination of JavaScript inserted into every HTML page and `fswatch` to let you keep a web browser open on your notebook and have it be refreshed automatically each time you save changes to your files.
 
 ### Writing documents and previewing the results
 
-When you create new files in your `contents` directory, you need to update the list of pages in `pangolin.yml`.  The order in which the files are listed in the table of contents is the order in which they will appear on the front page of your notebook.
+When you create new files in your `docs` directory, you need to update the value of the variable `content-pages` in the file `pangolin.yml`.  The order in which the files are listed is the order in which they will appear  in the table of contents on the front page of your notebook.
 
 To generated formatted output, you can manually run the following command in your notebook directory:
 
@@ -84,7 +86,7 @@ To generated formatted output, you can manually run the following command in you
 make
 ```
 
-The `index.html` file will be placed at the top level of your notebook directory, and the formatted output for all other pages will be placed in the `contents` directory.
+The `index.html` file will be placed at the top level of your notebook directory, and the formatted output for all other pages will be placed in the `docs` directory.  Normally, the process should only recreate those files that need to be recreated based on whether the corresponding source `.md` files have changed.  If you need to force the regeneration of everything, use `make -B`.
 
 Pangolin Notebook includes an auto-refresh facility that puts JavaScript code into every HTML page to detect that the underlying file has been changed. (It _only_ does this for files on your local computer, not for files located anywhere else&mdash;it will not do this on GitHub Pages, for example.)  This is meant to work in conjunction with a simple auto-re-`make` scheme to let you view the formatted HTML in a browser as you edit.  To take advantage of this, run the following command in your notebook directory:
 
@@ -95,6 +97,8 @@ make autorefresh
 Then open a notebook page in your browser, and try editing the corresponding Markdown file.  After a second or two, the page in your web browser should refresh to show the changed version.
 
 ### Committing the results
+
+_... more forthcoming ..._
 
 
 ### Publishing updates to GitHub pages

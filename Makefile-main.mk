@@ -25,7 +25,7 @@ trigger-parsing := $(foreach v,$(shell . $(pangolin)/yaml.sh; parse_yaml $(confi
 
 # Inputs
 
-content-dir     := $(notebook-dir)/contents
+content-dir     := docs
 input-filenames := $(filter-out $(front-page),$(content-pages))
 input-filenames := $(filter-out $(about-page),$(input-filenames))
 input-files     := $(patsubst %,$(content-dir)/%,$(input-filenames))
@@ -35,7 +35,7 @@ about-page-file := $(content-dir)/$(about-page)
 
 # Outputs
 
-index-file	:= $(notebook-dir)/index.html
+index-file	:= $(content-dir)/index.html
 
 output-dir      := $(content-dir)
 output-files	:= $(patsubst %,$(output-dir)/%,$(input-filenames:.md=.html))
@@ -72,7 +72,7 @@ font-files      := $(addprefix $(output-dir)/fonts/,$(notdir $(font-files-src)))
 
 # Temp files
 
-toc             := _toc.html
+toc             := $(content-dir)/_toc.html
 
 # Arguments to pandoc
 
@@ -86,7 +86,7 @@ doc-args = \
         --metadata link-citations=true \
 	--metadata date="`date "+%B %e, %Y"`" \
 	--variable content-dir="$(content-dir)" \
-	--variable about-page="$(about-file)" \
+	--variable about-page="$(about-page:.md=.html)" \
 	--variable notebook-url="$(notebook-url)" \
 	--variable source-url="$(source-url)" \
 	--template=$(doc-template) \
@@ -103,8 +103,8 @@ $(index-file): $(front-page-file) $(input-files) $(config)
 $(index-file): $(doc-template) $(toc-template)
 	echo '<ul class="toc">' > $(toc)
 	for file in $(input-filenames); do \
-	    html="${content-dir}/$${file/.md/.html}"; \
-	    pandoc $(doc-args) $(content-dir)/$$file -o $$html; \
+	    html="$${file/.md/.html}"; \
+	    pandoc $(doc-args) $(content-dir)/$$file -o $(content-dir)/$$html; \
 	    title=`grep 'title:' $(content-dir)/$$file | cut -f2 -d':'`; \
 	    echo "<li><a href=\"$$html\"><span class=\"toc-entry\">" $$title "</span></a></li>" >> $(toc); \
 	done;
@@ -117,7 +117,10 @@ $(output-dir)/%.html: $(content-dir)/%.md $(config)
 $(about-file): $(about-page-file) $(config)
 	pandoc --variable page-source-url="$(source-url)/$<" $(doc-args) $< -o $@
 
-create-dirs: $(output-dir)/css $(output-dir)/js $(output-dir)/fonts $(output-dir)/$(content-dir)
+create-dirs: $(output-dir) $(output-dir)/css $(output-dir)/js $(output-dir)/fonts
+
+$(output-dir):
+	mkdir -p $(output-dir)
 
 $(output-dir)/css:
 	mkdir -p $(output-dir)/css
@@ -127,9 +130,6 @@ $(output-dir)/js:
 
 $(output-dir)/fonts:
 	mkdir -p $(output-dir)/fonts
-
-$(output-dir)/$(content-dir):
-	(cd $(output-dir); rm -f $(notdir $(content-dir)); ln -s . $(notdir $(content-dir)))
 
 $(output-dir)/css/%.css: $(styles-dir)/bootstrap/css/%.css
 	cp -rp $(styles-dir)/bootstrap/css/$(notdir $<) $(output-dir)/css/$(notdir $<)
