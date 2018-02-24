@@ -5,10 +5,10 @@ author:
 - Your Name
 ---
 
-This is a sample page in the notebook.  Use normal Markdown to write the text.  You can insert figures using the following HTML syntax:
+This is a sample page in the notebook.  Use normal Markdown to write the text. You can insert figures using the following HTML syntax; figure contents can be in any common image format using the `<img>` tag or SVG drawings using the `<svg>` tag:
 
 <figure>
-  <img width="200pt" src="pangolin-noteboo/.graphics/pangolin-sm.jpg">
+  <svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="1" fill="#999999" /></svg> 
   <figcaption>You can write the caption for the figure here.  The resulting text will appear below the figure in the formatted HTML.  Note that GitHub will not display this in the GitHub source repository views, but GitHub Pages will render the result correctly.</figcaption>
 </figure>
 
