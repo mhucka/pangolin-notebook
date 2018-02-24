@@ -4,7 +4,7 @@ Pangolin Notebook<img width="280px" title="Illustration of Pangolin by Joseph Wo
 Pangolin Notebook is a system for easily creating an online notebook written using [Pandoc](https://pandoc.org)-flavored [Markdown](https://pandoc.org/MANUAL.html), with support for citations, mathematics, auto-generation of previews while you write, and hosting with [GitHub Pages](https://pages.github.com).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Latest version](https://img.shields.io/badge/Latest_version-1.1.0-green.svg)](http://shields.io)
+[![Latest version](https://img.shields.io/badge/Latest_version-1.3.0-green.svg)](http://shields.io)
 
 *Author*:      [Michael Hucka](http://github.com/mhucka)<br>
 *Repository*:   [https://github.com/mhucka/pangolin-notebook](https://github.com/mhucka/pangolin-notebook)<br>
