@@ -52,11 +52,11 @@ Before you can use Pangolin Notebook, you will need the following software insta
 
 ### ⓶&nbsp;&nbsp; _Install Pangolin Notebook_
 
-The basic approach to setting up Pangolin Notebook is to create a fresh directory for your new notebook, clone the Pangolin Notebook source files into a subdirectory of that directory, and do a couple of configuration steps to set up the notebook.  In more detail, the following steps should get you started:
+The basic approach to setting up Pangolin Notebook is to create a fresh directory for your new notebook, add the Pangolin Notebook source files into a subdirectory of that directory, and do a couple of configuration steps to set up the notebook.  In more detail, the following steps should get you started:
 
 1. Create a directory for your notebook and `cd` into it
 2. Run the command `git init`
-3. Run the command `git clone https://github.com/mhucka/pangolin-notebook.git`
+3. Run the command `git submodule add https://github.com/mhucka/pangolin-notebook.git`
 4. Run the command `./pangolin-notebook/setup`
 
 ### ⓷&nbsp;&nbsp; _Configure Pangolin Notebook_
