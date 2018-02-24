@@ -8,7 +8,7 @@
 # =============================================================================
 
 program=${0##*/}
-cwd=`/bin/pwd -P`
+cwd=$(/bin/pwd -P)
 pangolin_path="$cwd/pangolin-notebook"
 ignore_template="$pangolin_path/templates/dot.gitignore"
 about_template="$pangolin_path/templates/about-template.md"
@@ -68,28 +68,26 @@ say() {
     local msg=$2
     local nonewline=$3
 
-    local RED=`tput setaf 1`
-    local GREEN=`tput setaf 2`
-    local YELLOW=`tput setaf 3`
-    local RESET=`tput sgr0`
+    local RED=$(tput setaf 1)
+    local GREEN=$(tput setaf 2)
+    local YELLOW=$(tput setaf 3)
+    local RESET=$(tput sgr0)
 
     if [[ -z "$nonewline" ]]; then
-        newline="\n"
+        newline="\\n"
     else
         newline=
     fi
 
     case $code in
         info)
-            if $chatty; then
-                printf "${GREEN}%s${RESET}${newline}" "$2"
-            fi
+            printf "${GREEN}%s${RESET}${newline}" "$msg"
             ;;
         warning)
-            printf "${YELLOW}%s${RESET}${newline}" "$2"
+            printf "${YELLOW}%s${RESET}${newline}" "$msg"
             ;;
         error)
-            printf "${RED}%s${RESET}${newline}" "$2"
+            printf "${RED}%s${RESET}${newline}" "$msg"
             ;;
     esac
 }
@@ -122,10 +120,10 @@ copy_files() {
     cp -i "$pangolin_path/pangolin.yml" "$cwd"
     if [[ -e .gitignore ]]; then
         say info "Appending to .gitignore file."
-        grep -v '^## ' $ignore_template >> .gitignore
+        grep -v '^## ' "$ignore_template" >> .gitignore
     else
         say info "Creating .gitignore file."
-        cp -i $ignore_template .gitignore
+        cp -i "$ignore_template" .gitignore
     fi
 }
 
@@ -133,10 +131,10 @@ create_dirs() {
     say info "Creating contents directory."
     mkdir -p contents
     say info "Creating template front page and about page."
-    cp -i $about_template contents/about.md
-    cp -i $front_template contents/front-page.md
-    cp -i $page_template contents/page-1.md
-    cp -i $page_template contents/page-2.md
+    cp -i "$about_template" contents/about.md
+    cp -i "$front_template" contents/front-page.md
+    cp -i "$page_template" contents/page-1.md
+    cp -i "$page_template" contents/page-2.md
 }
 
 check_dependencies() {
@@ -153,7 +151,7 @@ check_dependencies() {
         say error "Cannot find make -- please check GNU Make is installed."
         problem=true
     fi
-    mversion=`make --version | grep GNU`
+    mversion=$(make --version | grep GNU)
     if [ -z "$mversion" ]; then
         say error "The copy of 'make' found does not appear to be GNU Make."
         say error "Please check GNU Make is installed and runnable as 'make'."
