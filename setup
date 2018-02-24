@@ -114,7 +114,9 @@ check_existing() {
     done
 }
 
-copy_files() {
+create_content() {
+    say info "Creating $contents_dir directory."
+    mkdir -p "$contents_dir"
     say info "Copying template Makefile."
     cp -i "$pangolin_path/Makefile" "$cwd"
     say info "Copying template Pangolin configuration file."
@@ -126,11 +128,8 @@ copy_files() {
         say info "Creating .gitignore file."
         cp -i "$ignore_template" .gitignore
     fi
-}
-
-create_dirs() {
-    say info "Creating $contents_dir directory."
-    mkdir -p "$contents_dir"
+    say info "Creating .nojekyll file"
+    touch "$contents_dir/.nojekyll"
     say info "Creating template front page and about page."
     cp -i "$about_template" "$contents_dir/about.md"
     cp -i "$front_template" "$contents_dir/front-page.md"
@@ -187,8 +186,7 @@ inform_user() {
 parse_args "$@"
 check_dirs
 check_existing
-copy_files
-create_dirs
+create_content
 check_dependencies
 inform_user
 
