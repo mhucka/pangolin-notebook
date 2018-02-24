@@ -16,7 +16,6 @@ Table of contents
 * [Introduction](#-introduction)
 * [Installing Pangolin Notebook](#-installing-pangolin-notebook)
 * [Using Pangolin Notebook](#-using-pangolin-notebook)
-* [Do you like it?](#-do-you-like-it)
 * [Getting help and support](#-getting-help-and-support)
 * [Contributing — info for developers](#-contributing--info-for-developers)
 * [Copyright and license](#-copyright-and-license)
@@ -34,7 +33,7 @@ Pangolin Notebook grew out of a desire for a simple way to write documents, with
 * use GitHub Pages to host the formatted results
 * use GitHub to store the source files and allow collaboration with other people
 
-There exist are other, similar systems, but in every case that I tried, I encountered a limitation or source of frustration.  Ultimately, I was led to create Pangolin Notebook.  I realize Pangolin Notebook is a variation on a common theme.  Nevertheless, if you are looking for the same feature set, please feel free to use it as a starting point for your own work&mdash;perhaps this particular formulation will be useful to you too.
+There exist are other, similar systems, but in every case that I tried, I encountered a limitation or source of frustration.  Ultimately, I was led to create Pangolin Notebook.  I do realize Pangolin Notebook is yet another variation on a common theme.  Nevertheless, if you are looking for the same feature set, please feel free to use it as a starting point for your own work&mdash;perhaps this particular formulation will be useful to you too.
 
 The "Pangolin" in the name is a loose acronym for _**PAN**doc-based **G**ithub d**O**cuments in htm**L** us**I**ng markdow**N**_.  (By the way, [pangolins are the most trafficked mammals](https://www.economist.com/news/science-and-technology/21736108-help-though-may-be-coming-some-natures-weirdest-mammals-are-some-most) in the world because stupid humans mistakenly think that eating them provides health benefits.  Please [learn more about them](http://video.nationalgeographic.com/video/short-film-showcase/the-tragic-tale-of-a-pangolin-the-worlds-most-trafficked-animal) and the [cruel way people treat them](https://en.wikipedia.org/wiki/Pangolin_trade#Black_market), and [help stop their hunting](http://savepangolins.org/help/) before they are driven to extinction.)
 
