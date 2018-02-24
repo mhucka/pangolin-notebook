@@ -5,5 +5,4 @@
 ## This is meant to be added to a user's .gitignore file (if one exists) or
 ## used as a .gitignore file (if one doesn't exist).
 
-_nav.html
 _toc.html
