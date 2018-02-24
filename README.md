@@ -1,11 +1,26 @@
 Pangolin Notebook<img width="280px" title="Illustration of Pangolin by Joseph Wolf, 1865, Proceedings of the Zoological Society of London" align="right" src=".graphics/pangolin-sm.jpg">
 ================
 
-Pangolin Notebook is a template for creating an online notebook written using [Pandoc](https://pandoc.org)-flavored [Markdown](https://pandoc.org/MANUAL.html) with support for citations, mathematics, auto-generation of previews while you write, and simple hosting using [GitHub Pages](https://pages.github.com).
+Pangolin Notebook is a system for easily creating an online notebook written using [Pandoc](https://pandoc.org)-flavored [Markdown](https://pandoc.org/MANUAL.html), with support for citations, mathematics, auto-generation of previews while you write, and hosting with [GitHub Pages](https://pages.github.com).
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Latest version](https://img.shields.io/badge/Latest_version-1.1.0-green.svg)](http://shields.io)
 
 *Author*:      [Michael Hucka](http://github.com/mhucka)<br>
 *Repository*:   [https://github.com/mhucka/pangolin-notebook](https://github.com/mhucka/pangolin-notebook)<br>
 *License*:      Unless otherwise noted, this content is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+
+Table of contents
+-----------------
+
+* [Introduction](#-introduction)
+* [Installing Pangolin Notebook](#-installing-pangolin-notebook)
+* [Using Pangolin Notebook](#-using-pangolin-notebook)
+* [Do you like it?](#-do-you-like-it)
+* [Getting help and support](#-getting-help-and-support)
+* [Contributing — info for developers](#-contributing--info-for-developers)
+* [Copyright and license](#-copyright-and-license)
+* [Acknowledgments](#-acknowledgments)
 
 ✺ Introduction
 -------------
