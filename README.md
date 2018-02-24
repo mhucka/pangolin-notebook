@@ -94,6 +94,8 @@ make autorefresh
 
 Then open a notebook page in your browser, and try editing the corresponding Markdown file.  After a second or two, the page in your web browser should refresh to show the changed version.
 
+### Committing the results
+
 
 ### Publishing updates to GitHub pages
 
