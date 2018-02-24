@@ -68,7 +68,7 @@ The last step in the installation above (running `setup`) copies a file named `p
 * `content-pages` &ndash; this contains a list of the files that constitute the top-level pages of your notebook.  **You need to update this variable every time you add a new notebook page**.
 * `notebook-url` &ndash; the online URL (e.g., `https://yourlogin.github.io/yournotebook` if you're using GitHub Pages)
 
-There are some additional variables in `pangolin.yml` that you can set, such as `source-url` if your notebook source files are public (e.g., if you store them in GitHub) and `bib-style` if you want to use a different reference style file.
+There are some additional variables in `pangolin.yml` that you can set, such as `feedback-url` if you want to point people to (e.g.,) an issue tracker, and `bib-style` if you want to use a different reference style file.
 
 
 ► Using Pangolin Notebook

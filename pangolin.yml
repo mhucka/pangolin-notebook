@@ -27,6 +27,12 @@ notebook-url: CHANGE-THIS-TO-YOUR-NOTEBOOK-URL
 
 source-url:
 
+# (Optional) A URL to an issue tracker where people can report problems or
+# write comments.  This can be, for example, the GitHub repository issues
+# URL.  Leave EMPTY if you don't want this or
+
+feedback-url:
+
 # (Optional) Select a different bibliography format style.  The value of
 # this next variable must be a file located in the "styles/citation-styles"
 # subdirectory of Pangolin Notebook.

@@ -89,6 +89,7 @@ doc-args = \
 	--variable about-page="$(about-page:.md=.html)" \
 	--variable notebook-url="$(notebook-url)" \
 	--variable source-url="$(source-url)" \
+	--variable feedback-url="$(feedback-url)" \
 	--template=$(doc-template) \
 	--data-dir $(notebook-dir) \
 	--csl=$(bib-style-csl) \
@@ -112,10 +113,10 @@ $(index-file): $(doc-template) $(toc-template)
 	pandoc $(doc-args) $(front-page-file) | contents=`cat $(toc)` envsubst '$$contents' > $(index-file)
 
 $(output-dir)/%.html: $(content-dir)/%.md $(config)
-	pandoc --variable page-source-url="$(source-url)/$<" $(doc-args) $< -o $@
+	pandoc $(doc-args) $< -o $@
 
 $(about-file): $(about-page-file) $(config)
-	pandoc --variable page-source-url="$(source-url)/$<" $(doc-args) $< -o $@
+	pandoc $(doc-args) $< -o $@
 
 create-dirs: $(output-dir) $(output-dir)/css $(output-dir)/js $(output-dir)/fonts
 

@@ -90,7 +90,10 @@
               <ul class="nav navbar-nav navbar-right">
                 <li><a href="$about-page$">About this</a></li>
                 $if(source-url)$
-                <li><a href="$page-source-url$">Leave comments</a></li>
+                <li><a href="$source-url$">GitHub</a></li>
+                $endif$
+                $if(feedback-url)$
+                <li><a href="$feedback-url$">Leave comments</a></li>
                 $endif$
               </ul>
             </div>
