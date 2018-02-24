@@ -26,19 +26,18 @@ trigger-parsing := $(foreach v,$(shell . $(pangolin)/yaml.sh; parse_yaml $(confi
 # Inputs
 
 content-dir     := $(notebook-dir)/contents
-input-dir       := $(notebook-dir)/$(content-dir)
 input-filenames := $(filter-out $(front-page),$(content-pages))
 input-filenames := $(filter-out $(about-page),$(input-filenames))
-input-files     := $(patsubst %,$(input-dir)/%,$(input-filenames))
-bib-files	:= $(wildcard $(input-dir)/*.bibtex)
-front-page-file := $(input-dir)/$(front-page)
-about-page-file := $(input-dir)/$(about-page)
+input-files     := $(patsubst %,$(content-dir)/%,$(input-filenames))
+bib-files	:= $(wildcard $(content-dir)/*.bibtex)
+front-page-file := $(content-dir)/$(front-page)
+about-page-file := $(content-dir)/$(about-page)
 
 # Outputs
 
 index-file	:= $(notebook-dir)/index.html
 
-output-dir      := $(notebook-dir)/$(content-dir)
+output-dir      := $(content-dir)
 output-files	:= $(patsubst %,$(output-dir)/%,$(input-filenames:.md=.html))
 about-file      := $(output-dir)/$(about-page:.md=.html)
 
@@ -105,8 +104,8 @@ $(index-file): $(doc-template) $(toc-template)
 	echo '<ul class="toc">' > $(toc)
 	for file in $(input-filenames); do \
 	    html="${content-dir}/$${file/.md/.html}"; \
-	    pandoc $(doc-args) $(input-dir)/$$file -o $$html; \
-	    title=`grep 'title:' $(input-dir)/$$file | cut -f2 -d':'`; \
+	    pandoc $(doc-args) $(content-dir)/$$file -o $$html; \
+	    title=`grep 'title:' $(content-dir)/$$file | cut -f2 -d':'`; \
 	    echo "<li><a href=\"$$html\"><span class=\"toc-entry\">" $$title "</span></a></li>" >> $(toc); \
 	done;
 	echo '</ul>' >> $(toc)
@@ -130,7 +129,7 @@ $(output-dir)/fonts:
 	mkdir -p $(output-dir)/fonts
 
 $(output-dir)/$(content-dir):
-	(cd $(output-dir); rm -f $(content-dir); ln -s . $(content-dir))
+	(cd $(output-dir); rm -f $(notdir $(content-dir)); ln -s $(content-dir) .)
 
 $(output-dir)/css/%.css: $(styles-dir)/bootstrap/css/%.css
 	cp -rp $(styles-dir)/bootstrap/css/$(notdir $<) $(output-dir)/css/$(notdir $<)
