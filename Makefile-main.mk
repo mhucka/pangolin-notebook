@@ -129,7 +129,7 @@ $(output-dir)/fonts:
 	mkdir -p $(output-dir)/fonts
 
 $(output-dir)/$(content-dir):
-	(cd $(output-dir); rm -f $(notdir $(content-dir)); ln -s $(content-dir) .)
+	(cd $(output-dir); rm -f $(notdir $(content-dir)); ln -s . $(notdir $(content-dir)))
 
 $(output-dir)/css/%.css: $(styles-dir)/bootstrap/css/%.css
 	cp -rp $(styles-dir)/bootstrap/css/$(notdir $<) $(output-dir)/css/$(notdir $<)
