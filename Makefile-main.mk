@@ -147,12 +147,15 @@ $(output-dir)/js/%.js: $(styles-dir)/pangolin/js/%.js
 $(output-dir)/fonts/%: $(styles-dir)/bootstrap/fonts/%
 	cp -rp $(styles-dir)/bootstrap/fonts/$(notdir $<) $(output-dir)/fonts/$(notdir $<)
 
-clean:
+clean:;
 	-rm -f $(output-files) $(index-file) $(toc) $(about-file)
 
 watch-files := $(input-files) $(front-page-file) $(about-page-file) $(config) \
 		$(doc-template) $(toc-template) $(bib-style-csl) \
 		$(css-files-src) $(js-files-src) $(font-files-src)
+
+push:;
+	(git add . && git commit && git push)
 
 # Autorefresh excludes Emacs backup files, checkpoint files, and the HTML
 # files (because make would otherwise run twice every time it generated
@@ -161,4 +164,47 @@ watch-files := $(input-files) $(front-page-file) $(about-page-file) $(config) \
 autorefresh:;
 	((fswatch -0 -o -I -e '*~' -e '\.#.*' -e '.*\.html' $(content-dir) $(config) | xargs -0 -I {} make) &)
 
-.PHONY: create-dirs
+help:
+	@echo 'This is the Makefile for a Pangolin Notebook website.'
+	@echo 'Available commands:'
+	@echo ''
+	@echo '  make'
+	@echo '    Regenerates the formatted HTML output if necessary. If none'
+	@echo '    of the input files have been changed, it does nothing.'
+	@echo ''
+	@echo '  make -B'
+	@echo '    Forces regenerating all output files even if the input'
+	@echo '    files have not been changed. Useful for testing or when'
+	@echo '    you update the pandoc binary on your computer.'
+	@echo ''
+	@echo '  make autorefresh'
+	@echo '    Starts a process to watch the input files and regenerate'
+	@echo '    the formatted output automatically when the inputs have'
+	@echo '    changed. To take advantage of this, open the index HTML'
+	@echo '    file (or other HTML file from the notebook) in a web'
+	@echo '    browser, and thereafter when you edit the source files,'
+	@echo '    Pangolin Notebook will rerun pandoc and automatically'
+	@echo '    refresh the browser view.'
+	@echo ''
+	@echo '  make push'
+	@echo '    Commits changes to git and pushes an update to the remote.'
+	@echo ''
+	@echo '  make clean'
+	@echo '    Deletes all HTML files from the output directory.'
+	@echo ''
+	@echo '  make help'
+	@echo '    Print this summary of available commands.'
+	@echo ''
+	@echo 'Do not forget to update the file "pangolin.yml" whenever you'
+	@echo 'add new Markdown files. Pangolin Notebook can figure out when'
+	@echo 'files have changed, but it cannot figure out on its own the'
+	@echo 'files that are meant to be added to the table of contents.'
+	@echo ''
+	@echo 'For more information about Pangolin Notebook, please visit the'
+	@echo 'following website: http://github.com/mhucka/pangolin-notebook'
+
+# Miscellaneous convenience commands.
+
+html: default
+
+.PHONY: create-dirs html help clean autorefresh push

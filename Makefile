@@ -19,9 +19,15 @@
 ## The following are possible make commands that the Pangolin Notebook
 ## makefiles are designed to support:
 ##
+##   make help
+##       Print a summary of the available make commands
+##
 ##   make
 ##       Regenerates the formatted HTML output if necessary. If none of the
 ##       input files have been changed, it does nothing.
+##
+##   make html
+##       Synonym for just "make".
 ##
 ##   make -B
 ##       Forces regenerating all output files.  Useful for testing, or when
