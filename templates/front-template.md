@@ -10,4 +10,4 @@ This text will appear on the front page of the notebook.  The following line wil
 
 <div class="article-list">$contents</div>
 
-The table of contents can appear anywhere in the front page; simple write text above and/or below.  (You can even skip writing any text at all, but beware that mystery is not usually a desirable feature in a notebook.)
+The table of contents can appear anywhere in the front page; simple write text above and/or below, as shown here in this example.  (You can even skip writing any text at all, but beware that mystery is not usually a desirable feature in a notebook.)
