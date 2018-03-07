@@ -132,7 +132,7 @@ create_content() {
     touch "$contents_dir/.nojekyll"
     say info "Creating template front page and about page."
     cp -i "$about_template" "$contents_dir/about.md"
-    cp -i "$front_template" "$contents_dir/front-page.md"
+    cp -i "$front_template" "$contents_dir/index.md"
     cp -i "$page_template" "$contents_dir/page-1.md"
     cp -i "$page_template" "$contents_dir/page-2.md"
 }

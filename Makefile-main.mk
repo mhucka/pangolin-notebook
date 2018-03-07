@@ -30,8 +30,8 @@ input-filenames := $(filter-out $(front-page),$(content-pages))
 input-filenames := $(filter-out $(about-page),$(input-filenames))
 input-files     := $(patsubst %,$(content-dir)/%,$(input-filenames))
 bib-files	:= $(wildcard $(content-dir)/*.bibtex)
-front-page-file := $(content-dir)/$(front-page)
-about-page-file := $(content-dir)/$(about-page)
+front-page-file := $(content-dir)/index.md
+about-page-file := $(content-dir)/about.md
 
 # Outputs
 

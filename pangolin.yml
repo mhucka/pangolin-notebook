@@ -38,16 +38,3 @@ feedback-url:
 # subdirectory of Pangolin Notebook.
 
 bib-style: modified-acm-siggraph.csl
-
-# (Optional) The next variable determines which input file is used to produce
-# the front page of the formatted notebook (i.e., index.html).  The text
-# inside this file should contain one instance of the literal string
-# "$contents" (without the quotes) to indicate where the table of contents
-# should be placed on the page.  The rest of the page content is up to you.
-
-front-page: front-page.md
-
-# (Optional) The next variable determines which of the input files is used as
-# the basis of the "About" page for the notebook.
-
-about-page: about.md
