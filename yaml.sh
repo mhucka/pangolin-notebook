@@ -6,10 +6,13 @@
 # @license MIT License
 # @website https://github.com/jasperes/bash-yaml
 #
-# IMPORTANT: this has been modified from the original version.  I changed the
-# value assignment to omit the parentheses that the original version added,
-# omit double quotes around values, fix a bug in a sed expression, and
-# remove code that translated dashes to underscores in variable names.
+# IMPORTANT: this has been modified from the original version.  The most
+# important change is that this replaces space characters in the values of
+# variable assignments with the string "~~~", in order to make it possible to
+# read assignments in the Makefile that calls this code.  Other changes: the
+# value assignment omits the parentheses that the original version added,
+# omits double quotes around values, fixes a bug in a sed expression, and
+# removes code that translated dashes to underscores in variable names.
 #
 # The contents of this file originally came from "yaml.sh" in the "bash-yaml"
 # repository at https://github.com/jasperes/bash-yaml/ as it existed
@@ -33,6 +36,15 @@ function parse_yaml() {
             -e "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
             -e "s|^\($s\)\($w\)$s[:-]$s\(.*\)$s\$|\1$fs\2$fs\3|p" |
 
+        # If the value on the RHS contains spaces, then the $(shell)
+        # invocation in calling makefile breaks strings into multiple lines
+        # at space characters.  I could not find another solution except to
+        # replace spaces in the value with a character sequence that is then
+        # filtered out in the makefile after the $(foreach) is used.  This
+        # is the reason for the following replacement:
+
+        sed -e 's/ /~~~/g' |
+
         awk -F"$fs" '{
             indent = length($1)/2;
             if (length($2) == 0) { conj[indent]="+";} else {conj[indent]="";}
@@ -45,6 +57,7 @@ function parse_yaml() {
             }' |
 
         sed -e 's/_=/+=/g' \
+            -e 's/_+=/+=/g' \
             -e '/\..*=/s|\.|_|'
 
     ) < "$yaml_file"
