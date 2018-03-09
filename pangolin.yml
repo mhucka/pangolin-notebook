@@ -1,35 +1,44 @@
 # =============================================================================
 # This is the configuration file for a Pangolin Notebook installation.
 # Change the values below to suit your preferences and particular notebook.
+# Update the variable "content-pages" each time you add a file to the notebook.
 # For more information, please visit http://github.com/mhucka/pangolin-notebook
 # =============================================================================
 
 # The following variable lists the pages that are included in the notebook.
 # The order is significant: the order in which files are listed here is the
-# order in which they will be inserted by the string "$contents" on the front
-# page (see below).  Precede each file name in the following list with a
-# space-dash-space character sequence, as shown in the examples below.  The
-# files can be named anything; the ones below are just examples.
+# order in which they will be put into the string "$contents" in the index
+# page.  Precede each file name with space-dash-space as shown below. (Files
+# can be named anything; the ones below are just examples for illustration.)
 # IMPORTANT: Remember to update this every time you add another content file!
 
 content-pages:
  - page-1.md
  - page-2.md
 
+# The following variable sets the site name that appears in the title bar.
+# Best make it short.
+
+sitename: "My Site"
+
+# A copyright statement, to be put into the site footer.
+
+copyright: "Creative Commons Attribution License 4.0"
+
 # The URL to the live, online notebook.  If you are using GitHub Pages, this
 # will be something like "https://yourlogin.github.io/yournotebook".
 
 notebook-url: CHANGE-THIS-TO-YOUR-NOTEBOOK-URL
 
-# (Optional) The URL to the source repo for your notebook, if you want to show
-# this in the navigation bar.  This can be, for example, the GitHub repo URL.
-# Leave EMPTY if the resource repo is not public.
+# (Optional) The URL to the source repo for your notebook, if you want to
+# show this in the footer.  This can be, e.g., the GitHub repository URL.
+# Leave empty if the resource repo is not public.
 
 source-url:
 
 # (Optional) A URL to an issue tracker where people can report problems or
 # write comments.  This can be, for example, the GitHub repository issues
-# URL.  Leave EMPTY if you don't want this or
+# URL.  Leave empty if you don't want this.
 
 feedback-url:
 
