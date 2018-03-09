@@ -16,30 +16,34 @@
 ##
 ## ----------------------------------------------------------------------------
 
-# First read the config file and set Make variables.  This uses a hack: the
-# line to set variable "trigger-parsing" causes Make to execute a command that
-# includes calling 'eval', which sets values in the running Make process.
-
 config          := $(notebook-dir)/pangolin.yml
-trigger-parsing := $(foreach v,$(shell . $(pangolin)/yaml.sh; parse_yaml $(config)),$(eval $v))
+
+# First read the config file and set Make variables.  This uses a hack: the
+# line to set variable "trigger-parsing" causes Make to execute a command
+# that includes calling 'eval', which sets values in the running Make
+# process.  The bizarre substitution involving "~~~" below is due to the fact
+# that $(shell) will split lines on space characters, and this is fatal if
+# the value of a variable constains spaces.  I tried to find another solution
+# to this, but failed, so ultimately had to use a hack: first, yaml.sh
+# replaces spaces in the values with the sequence "~~~", and then we replace
+# "~~~" with a space character after we read
+
+trigger-parsing := $(foreach v,$(shell . $(pangolin)/yaml.sh; parse_yaml $(config)),$(eval $(subst ~~~, ,$v)))
 
 # Inputs
 
 content-dir     := docs
-input-filenames := $(filter-out $(front-page),$(content-pages))
-input-filenames := $(filter-out $(about-page),$(input-filenames))
-input-files     := $(patsubst %,$(content-dir)/%,$(input-filenames))
+input-files     := $(patsubst %,$(content-dir)/%,$(content-pages))
 bib-files	:= $(wildcard $(content-dir)/*.bibtex)
-front-page-file := $(content-dir)/index.md
+index-page-file := $(content-dir)/index.md
 about-page-file := $(content-dir)/about.md
 
 # Outputs
 
-index-file	:= $(content-dir)/index.html
-
 output-dir      := $(content-dir)
-output-files	:= $(patsubst %,$(output-dir)/%,$(input-filenames:.md=.html))
-about-file      := $(output-dir)/$(about-page:.md=.html)
+output-files	:= $(patsubst %,$(output-dir)/%,$(content-pages:.md=.html))
+index-file	:= $(output-dir)/$(notdir $(index-page-file:.md=.html))
+about-file      := $(output-dir)/$(notdir $(about-page-file:.md=.html))
 
 # Templates
 
@@ -70,11 +74,11 @@ css-files       := $(addprefix $(output-dir)/css/,$(notdir $(css-files-src)))
 js-files        := $(addprefix $(output-dir)/js/,$(notdir $(js-files-src)))
 font-files      := $(addprefix $(output-dir)/fonts/,$(notdir $(font-files-src)))
 
-# Temp files
+# Temp files.
 
 toc             := $(content-dir)/_toc.html
 
-# Arguments to pandoc
+# Arguments to pandoc.
 
 doc-args = \
 	-f markdown+smart \
@@ -86,10 +90,12 @@ doc-args = \
         --metadata link-citations=true \
 	--metadata date="`date "+%B %e, %Y"`" \
 	--variable content-dir="$(content-dir)" \
-	--variable about-page="$(about-page:.md=.html)" \
+	--variable about-page="$(about-page-file:.md=.html)" \
 	--variable notebook-url="$(notebook-url)" \
 	--variable source-url="$(source-url)" \
 	--variable feedback-url="$(feedback-url)" \
+	--variable sitename="$(sitename)" \
+	--variable copyright="$(copyright)" \
 	--template=$(doc-template) \
 	--data-dir $(notebook-dir) \
 	--csl=$(bib-style-csl) \
@@ -100,17 +106,17 @@ doc-args = \
 default: | create-dirs $(css-files) $(js-files) $(font-files)
 default: $(index-file) $(output-files) $(about-file) $(config)
 
-$(index-file): $(front-page-file) $(input-files) $(config)
+$(index-file): $(index-page-file) $(input-files) $(config)
 $(index-file): $(doc-template) $(toc-template)
 	echo '<ul class="toc">' > $(toc)
-	for file in $(input-filenames); do \
+	for file in $(content-pages); do \
 	    html="$${file/.md/.html}"; \
 	    pandoc $(doc-args) $(content-dir)/$$file -o $(content-dir)/$$html; \
 	    title=`grep 'title:' $(content-dir)/$$file | cut -f2 -d':'`; \
 	    echo "<li><a href=\"$$html\"><span class=\"toc-entry\">" $$title "</span></a></li>" >> $(toc); \
 	done;
 	echo '</ul>' >> $(toc)
-	pandoc $(doc-args) $(front-page-file) | contents=`cat $(toc)` envsubst '$$contents' > $(index-file)
+	pandoc $(doc-args) $(index-page-file) | contents=`cat $(toc)` envsubst '$$contents' > $(index-file)
 
 $(output-dir)/%.html: $(content-dir)/%.md $(config)
 	pandoc $(doc-args) $< -o $@
@@ -150,7 +156,7 @@ $(output-dir)/fonts/%: $(styles-dir)/bootstrap/fonts/%
 clean:;
 	-rm -f $(output-files) $(index-file) $(toc) $(about-file)
 
-watch-files := $(input-files) $(front-page-file) $(about-page-file) $(config) \
+watch-files := $(input-files) $(index-page-file) $(about-page-file) $(config) \
 		$(doc-template) $(toc-template) $(bib-style-csl) \
 		$(css-files-src) $(js-files-src) $(font-files-src)
 
@@ -169,13 +175,12 @@ help:
 	@echo 'Available commands:'
 	@echo ''
 	@echo '  make'
-	@echo '    Regenerates the formatted HTML output if necessary. If none'
-	@echo '    of the input files have been changed, it does nothing.'
+	@echo '    Regenerates any HTML files that need to be regenerated,'
+	@echo '    base on whether the corresponding input files have been.'
 	@echo ''
-	@echo '  make -B'
+	@echo '  make force'
 	@echo '    Forces regenerating all output files even if the input'
-	@echo '    files have not been changed. Useful for testing or when'
-	@echo '    you update the pandoc binary on your computer.'
+	@echo '    files have not been changed.'
 	@echo ''
 	@echo '  make autorefresh'
 	@echo '    Starts a process to watch the input files and regenerate'
@@ -206,5 +211,8 @@ help:
 # Miscellaneous convenience commands.
 
 html: default
+
+force:;
+	make --always-make
 
 .PHONY: create-dirs html help clean autorefresh push
