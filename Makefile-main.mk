@@ -26,7 +26,7 @@ config          := $(notebook-dir)/pangolin.yml
 # the value of a variable constains spaces.  I tried to find another solution
 # to this, but failed, so ultimately had to use a hack: first, yaml.sh
 # replaces spaces in the values with the sequence "~~~", and then we replace
-# "~~~" with a space character after we read
+# "~~~" back to a space character here.
 
 trigger-parsing := $(foreach v,$(shell . $(pangolin)/yaml.sh; parse_yaml $(config)),$(eval $(subst ~~~, ,$v)))
 
