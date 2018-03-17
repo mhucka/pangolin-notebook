@@ -1,7 +1,7 @@
 Pangolin Notebook<img width="280px" title="Illustration of Pangolin by Joseph Wolf, 1865, Proceedings of the Zoological Society of London" align="right" src=".graphics/pangolin-sm.jpg">
 ================
 
-Pangolin Notebook is a simple static site generator ideal for creating a notebook written using [Pandoc](https://pandoc.org)-flavored [Markdown](https://pandoc.org/MANUAL.html), with citations, mathematics, auto-generation of previews, and hosting with [GitHub Pages](https://pages.github.com).
+Pangolin Notebook is a simple static site generator for creating a notebook written using [Pandoc](https://pandoc.org)-flavored [Markdown](https://pandoc.org/MANUAL.html), with citations, mathematics, auto-generation of previews, and hosting with [GitHub Pages](https://pages.github.com).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Latest version](https://img.shields.io/badge/Latest_version-1.3.0-green.svg?style=flat-square)](https://github.com/mhucka/pangolin-notebook/releases)
@@ -25,7 +25,7 @@ Table of contents
 ✺ Introduction
 -------------
 
-Pangolin Notebook grew out of a desire for a simple way to write documents, with the following criteria:
+Pangolin Notebook grew out of a desire for a simple way to write a collection of documents, with the following criteria:
 
 * write in plain text using a simple notation such as Markdown
 * include citations, with references stored in BibTeX format
@@ -34,7 +34,7 @@ Pangolin Notebook grew out of a desire for a simple way to write documents, with
 * use GitHub Pages to host the formatted results
 * use GitHub to store the source files and allow collaboration with other people
 
-There exist are other, similar systems, but in every case that I tried, I encountered a limitation or source of frustration.  Ultimately, I was led to create Pangolin Notebook.  I do realize Pangolin Notebook is yet another variation on a common theme.  Nevertheless, if you are looking for the same feature set, please feel free to use it as a starting point for your own work&mdash;perhaps this particular formulation will be useful to you too.
+There exist other, similar systems, but I encountered a limitation or source of frustration in every one I tried.  Ultimately, I was led to create Pangolin Notebook.  Admittedly, it's another variation on a common theme, but if you're looking for the same features, maybe this particular formulation will be useful to you too.
 
 The "Pangolin" in the name is a loose acronym for _**PAN**doc-based **G**ithub d**O**cuments in htm**L** us**I**ng markdow**N**_.  (By the way, [pangolins are the most trafficked mammals](https://www.economist.com/news/science-and-technology/21736108-help-though-may-be-coming-some-natures-weirdest-mammals-are-some-most) in the world because stupid humans mistakenly think that eating them provides health benefits.  Please [learn more about them](http://video.nationalgeographic.com/video/short-film-showcase/the-tragic-tale-of-a-pangolin-the-worlds-most-trafficked-animal) and the [cruel way people treat them](https://en.wikipedia.org/wiki/Pangolin_trade#Black_market), and [help stop their hunting](http://savepangolins.org/help/) before they are driven to extinction.)
 
@@ -47,26 +47,27 @@ Before you can use Pangolin Notebook, you will need the following software insta
 
 * [Pandoc](https://pandoc.org) version 2.1 or later, with LaTeX and BibTeX support
 * [GNU Make](https://www.gnu.org/software/make/)
-* [gettext](https://www.gnu.org/software/gettext/)
 * [fswatch](https://github.com/emcrisostomo/fswatch) (if you want to use Pangolin Notebooks' auto-rebuild approach)
-* Common Unix/Linux utility programs such as `bash`, `ls`, `cp`, etc. 
+* Common Unix/Linux utility programs such as `bash`, `ls`, `cp`, `sed`, etc. 
 
 ### ⓶&nbsp;&nbsp; _Install Pangolin Notebook_
 
-The basic approach to setting up Pangolin Notebook is to create a fresh directory for your new notebook, add the Pangolin Notebook source files into a subdirectory of that directory, and do a couple of configuration steps to set up the notebook.  In more detail, the following steps should get you started:
+The basic approach is to create a fresh directory for your notebook, add the Pangolin Notebook source files into a _subdirectory_ of that directory, and do some final configuration steps.  In more detail, the following steps should get you started:
 
 1. Create a directory for your notebook and `cd` into it
-2. Run the command `git init`
-3. Run the command `git submodule add https://github.com/mhucka/pangolin-notebook.git`
-4. Run the command `./pangolin-notebook/setup`
+2. `git init`
+3. `git submodule add https://github.com/mhucka/pangolin-notebook.git`
+4. `./pangolin-notebook/setup`
 
 The setup step will create a new subdirectory called `docs` in which your notebook files are meant to be located.  It will also create a few files as starting templates to help you understand the format.
 
 ### ⓷&nbsp;&nbsp; _Configure Pangolin Notebook_
 
-The last step in the installation above (running `setup`) copies a file named `pangolin.yml` into your notebook directory.  This file needs to be edited to set certain variables. You can edit it using any text editor.  The file contains comments that explain the variables; only two variables _must_ be set because Pangolin Notebook cannot figure them out itself:
+The step of running `setup` above will copy a file named `pangolin.yml` into your notebook directory.  This file needs to be edited to set certain variables. You can edit it using any text editor.  The file contains comments that explain the variables; only four variables _must_ be set because Pangolin Notebook cannot figure them out itself:
 
 * `content-pages` &ndash; this contains a list of the files that constitute the top-level pages of your notebook.  **You need to update this variable every time you add a new notebook page**.
+* `sitename` &ndash; a short name for your site
+* `copyright` &ndash; a license for others to quote or use your content
 * `notebook-url` &ndash; the online URL (e.g., `https://yourlogin.github.io/yournotebook` if you're using GitHub Pages)
 
 There are some additional variables in `pangolin.yml` that you can set, such as `feedback-url` if you want to point people to (e.g.,) an issue tracker, and `bib-style` if you want to use a different reference style file.
@@ -87,7 +88,7 @@ To generated formatted output, you can manually run the following command in you
 make
 ```
 
-The `index.html` file will be placed at the top level of your notebook directory, and the formatted output for all other pages will be placed in the `docs` directory.  Normally, the process should only recreate those files that need to be recreated based on whether the corresponding source `.md` files have changed.  If you need to force the regeneration of everything, use `make -B`.
+The `index.html` file will be placed at the top level of your notebook directory, and the formatted output for all other pages will be placed in the `docs` directory.  Normally, the process should only recreate those files that need to be recreated based on whether the corresponding source `.md` files have changed.  If you need to force the regeneration of everything, use `make force`.
 
 Pangolin Notebook includes an auto-refresh facility that puts JavaScript code into every HTML page to detect that the underlying file has been changed. (It _only_ does this for files on your local computer, not for files located anywhere else&mdash;it will not do this on GitHub Pages, for example.)  This is meant to work in conjunction with a simple auto-re-`make` scheme to let you view the formatted HTML in a browser as you edit.  To take advantage of this, run the following command in your notebook directory:
 
