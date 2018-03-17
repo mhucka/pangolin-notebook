@@ -1,6 +1,6 @@
 ---
 title: This is a page in the notebook
-date: $date$
+date: %DATE%
 author:
 - Your Name
 ---
