@@ -19,11 +19,11 @@ content-pages:
 # The following variable sets the site name that appears in the title bar.
 # Best make it short.
 
-sitename: "My Site"
+sitename: My Site
 
 # A copyright statement, to be put into the site footer.
 
-copyright: "Creative Commons Attribution License 4.0"
+copyright: Creative Commons Attribution License 4.0
 
 # The URL to the live, online notebook.  If you are using GitHub Pages, this
 # will be something like "https://yourlogin.github.io/yournotebook".
