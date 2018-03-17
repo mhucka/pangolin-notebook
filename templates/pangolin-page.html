@@ -135,24 +135,21 @@ $body$
           $endfor$
         </div>
       </div>
+      <div class="push"></div>
     </div>
     <footer>
-      <div class="container">
-        <div class="row center">
-          <div class="col s12 m4">
-            <div class="copyright-repo-info">
-              $if(copyright)$
-              <a href="$copyright$">$copyright$</a>
-              $endif$
-              &nbsp;&nbsp;&bull;&nbsp;&nbsp;
-              $if(source-url)$
-              <a class="github-link" href="$source-url$">GitHub Repository</a>
-              $endif$
-            </div>
-            <div class="pangolin-info">            
-              Made with <a href="https://github.com/mhucka/pangolin-notebook">Pangolin Notebook</a>
-            </div>
-          </div>
+      <div class="row center">
+        <div class="copyright-repo-info">
+          $if(copyright)$
+          <a href="$copyright$">$copyright$</a>
+          $endif$
+          &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+          $if(source-url)$
+          <a class="github-link" href="$source-url$">GitHub Repository</a>
+          $endif$
+        </div>
+        <div class="pangolin-info">            
+          Made with <a href="https://github.com/mhucka/pangolin-notebook">Pangolin Notebook</a>
         </div>
       </div>
     </footer>
