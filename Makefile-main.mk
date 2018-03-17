@@ -121,14 +121,14 @@ $(index-file): $(doc-template) $(toc-template)
 	done;
 	echo '</ul>' >> $(toc)
 	pandoc $(doc-args) $(index-page-file) | sed \
-	    -e '/%TOC%/r $(toc)' -e '/%TOC%/d' \
-	    -e 's/%DATE%/$(date)/g' -e '/%DATE%/d' \
-	    -e 's/%SOURCE_URL%/$(source-url)/g' -e '/%SOURCE_URL%/d' \
-	    -e 's/%NOTEBOOK_URL%/$(notebook-url)/g' -e '/%NOTEBOOK_URL%/d' \
-	    -e 's/%FEEDBACK_URL%/$(feedback-url)/g' -e '/%FEEDBACK_URL%/d' \
-	    -e 's/%SITENAME%/$(sitename)/g' -e '/%SITENAME%/d' \
-	    -e 's/%COPYRIGHT%/$(copyright)/g' -e '/%COPYRIGHT%/d' \
-	    -e 's/%DATE%/$(date)/g' -e '/%DATE%/d' \
+	    -e '/{TOC}/r $(toc)' -e '/{TOC}/d' \
+	    -e 's/{DATE}/$(date)/g' -e '/{DATE}/d' \
+	    -e 's/{SOURCE_URL}/$(source-url)/g' -e '/{SOURCE_URL}/d' \
+	    -e 's/{NOTEBOOK_URL}/$(notebook-url)/g' -e '/{NOTEBOOK_URL}/d' \
+	    -e 's/{FEEDBACK_URL}/$(feedback-url)/g' -e '/{FEEDBACK_URL}/d' \
+	    -e 's/{SITENAME}/$(sitename)/g' -e '/{SITENAME}/d' \
+	    -e 's/{COPYRIGHT}/$(copyright)/g' -e '/{COPYRIGHT}/d' \
+	    -e 's/{DATE}/$(date)/g' -e '/{DATE}/d' \
 	     > $(index-file)
 
 $(output-dir)/%.html: $(content-dir)/%.md $(config)
