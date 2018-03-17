@@ -78,6 +78,10 @@ font-files      := $(addprefix $(output-dir)/fonts/,$(notdir $(font-files-src)))
 
 toc             := $(content-dir)/_toc.html
 
+# Misc. variables.
+
+date            := $(shell date '+%B %e, %Y')
+
 # Arguments to pandoc.
 
 doc-args = \
@@ -88,7 +92,7 @@ doc-args = \
 	--email-obfuscation=none \
 	--mathjax \
         --metadata link-citations=true \
-	--metadata date="`date "+%B %e, %Y"`" \
+	--metadata date="$(date)" \
 	--variable content-dir="$(content-dir)" \
 	--variable about-page="$(about-page-file:.md=.html)" \
 	--variable notebook-url="$(notebook-url)" \
@@ -116,7 +120,16 @@ $(index-file): $(doc-template) $(toc-template)
 	    echo "<li><a href=\"$$html\"><span class=\"toc-entry\">" $$title "</span></a></li>" >> $(toc); \
 	done;
 	echo '</ul>' >> $(toc)
-	pandoc $(doc-args) $(index-page-file) | contents=`cat $(toc)` envsubst '$$contents' > $(index-file)
+	pandoc $(doc-args) $(index-page-file) | sed \
+	    -e '/%TOC%/r $(toc)' -e '/%TOC%/d' \
+	    -e 's/%DATE%/$(date)/g' -e '/%DATE%/d' \
+	    -e 's/%SOURCE_URL%/$(source-url)/g' -e '/%SOURCE_URL%/d' \
+	    -e 's/%NOTEBOOK_URL%/$(notebook-url)/g' -e '/%NOTEBOOK_URL%/d' \
+	    -e 's/%FEEDBACK_URL%/$(feedback-url)/g' -e '/%FEEDBACK_URL%/d' \
+	    -e 's/%SITENAME%/$(sitename)/g' -e '/%SITENAME%/d' \
+	    -e 's/%COPYRIGHT%/$(copyright)/g' -e '/%COPYRIGHT%/d' \
+	    -e 's/%DATE%/$(date)/g' -e '/%DATE%/d' \
+	     > $(index-file)
 
 $(output-dir)/%.html: $(content-dir)/%.md $(config)
 	pandoc $(doc-args) $< -o $@
